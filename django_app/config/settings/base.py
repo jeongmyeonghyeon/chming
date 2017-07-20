@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'member',
+    # 'member',
     'storages',
 ]
 
@@ -119,4 +119,4 @@ STATICFILES_DIRS = [
 ]
 
 # Authentication
-AUTH_USER_MODEL = 'member.MyUser'
+# AUTH_USER_MODEL = 'member.MyUser'
