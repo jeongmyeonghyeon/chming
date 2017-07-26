@@ -2,6 +2,10 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
 from django.db import models
 
+from utils.fields import CustomImageField
+
+
+# User
 #   pk
 # 	email(id)		EmailField					unique=true
 # 	password
@@ -14,9 +18,6 @@ from django.db import models
 # 	hobby			CharField
 # 	region			CharField
 # 	group			ManyToManyField(Group)
-
-from utils.fields import CustomImageField
-
 
 class User(AbstractUser):
     USER_GENDER_FEMALE = 'f'
