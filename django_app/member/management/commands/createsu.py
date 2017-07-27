@@ -13,13 +13,14 @@ class Command(BaseCommand):
         config_secret_common = json.loads(open(settings.CONFIG_SECRET_COMMON_FILE).read())
         username = config_secret_common['django']['default_superuser']['username']
         password = config_secret_common['django']['default_superuser']['password']
+        email = config_secret_common['django']['default_superuser']['email']
         # 만약 username에 해당하는 User가 없을 경우
         if not User.objects.filter(username=username).exists():
             # 해당 username으로 superuser를 생성
             User.objects.create_superuser(
                 username=username,
                 password=password,
-                email=''
+                email=email
             )
             print('Superuser %s created' % username)
         else:
