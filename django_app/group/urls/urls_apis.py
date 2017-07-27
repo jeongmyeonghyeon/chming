@@ -17,6 +17,6 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^$', include()),
-    url(r'^(?P<pk>\d+)/$', include()),
+    # url(r'^$', include()),
+    # url(r'^(?P<pk>\d+)/$', include()),
 ]
