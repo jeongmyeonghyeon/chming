@@ -22,7 +22,7 @@ class Post(models.Model):
     post_type = models.BooleanField(default=False)
     title = models.CharField(max_length=100)
     content = models.TextField()
-    group = models.ForeignKey('Group')
+    group = models.ForeignKey('group.Group')
     author = models.ForeignKey(base.AUTH_USER_MODEL)
     img = models.ImageField(
         upload_to='post/%Y/%m/%d',

@@ -30,11 +30,18 @@ class Group(models.Model):
         upload_to='group/%Y/%m/%d',
         blank=True,
     )
-    like_users = models.ManyToManyField('GroupLike')
+    like_users = models.ManyToManyField(
+        base.AUTH_USER_MODEL,
+        through='GroupLike',
+        related_name='like_groups',
+    )
     created_date = models.DateTimeField(auto_now_add=True)
     modified_d_date = models.DateTimeField(auto_now=True)
     lat = models.FloatField()
     lng = models.FloatField()
+
+    def __str__(self):
+        return self.group_name
 
 
 class GroupLike(models.Model):
