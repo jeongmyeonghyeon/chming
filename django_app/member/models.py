@@ -28,17 +28,17 @@ class User(AbstractUser):
         (USER_GENDER_MALE, 'Male'),
     )
 
-    email = models.EmailField(unique=True)
-    nickname = models.CharField(max_length=24, unique=True)
+    username = models.EmailField(unique=True)
+    nickname = models.CharField(max_length=24)
     profile_img = CustomImageField(
         upload_to='user/%Y/%m/%d/',
         blank=True,
         default_static_image='images/profile.png',
     )
-    gender = models.CharField(max_length=1, null=True, blank=True, choices=USER_GENDER_CHOICE)
-    birth_year = models.IntegerField(validators=[MaxValueValidator(9999)], null=True, blank=True)
-    birth_month = models.IntegerField(validators=[MaxValueValidator(12)], null=True, blank=True)
-    birth_day = models.IntegerField(validators=[MaxValueValidator(31)], null=True, blank=True)
+    gender = models.CharField(max_length=1, choices=USER_GENDER_CHOICE)
+    birth_year = models.IntegerField(validators=[MaxValueValidator(9999)])
+    birth_month = models.IntegerField(validators=[MaxValueValidator(12)])
+    birth_day = models.IntegerField(validators=[MaxValueValidator(31)])
     hobby = models.CharField(max_length=100, blank=True, null=True)
     region = models.CharField(max_length=100, blank=True, null=True)
     joined_group = models.ManyToManyField('group.Group')
