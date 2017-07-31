@@ -22,3 +22,11 @@ class UserSerializer(serializers.ModelSerializer):
             'region',
             'joined_group',
         )
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+
+        )

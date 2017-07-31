@@ -10,9 +10,10 @@ __all__ = (
 
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return UserSerializer
-            # elif self.request.method == 'POST':
-            #     return UserCreationSerializer
+    # def get_serializer_class(self):
+    #     if self.request.method == 'GET':
+    #         return UserSerializer
+    #     elif self.request.method == 'POST':
+    #         return UserSerializer
