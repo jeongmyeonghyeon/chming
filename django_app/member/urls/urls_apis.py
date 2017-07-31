@@ -20,5 +20,5 @@ from .. import apis
 
 urlpatterns = [
     url(r'^$', apis.UserListCreateView.as_view()),
-    # url(r'^(?P<pk>\d+)/$', include()),
+    url(r'^(?P<pk>\d+)/$', apis.UserRetrieveUpdateDestroyView.as_view()),
 ]
