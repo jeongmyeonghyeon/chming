@@ -16,7 +16,9 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from .. import apis
+
 urlpatterns = [
-    # url(r'^$', include()),
+    url(r'^$', apis.PostListCreateView.as_view()),
     # url(r'^(?P<pk>\d+)/$', include()),
 ]
