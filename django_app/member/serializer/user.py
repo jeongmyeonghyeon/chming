@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             'birth_day',
             'hobby',
             'region',
-            'joined_group',
+            # 'joined_group',
         )
 
 
