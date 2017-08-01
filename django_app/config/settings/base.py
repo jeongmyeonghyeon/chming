@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     'storages',
     'rest_framework',
+    'rest_framework.authtoken',
 
     'member',
     'group',
@@ -106,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'ko-kr'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Seoul'
 
@@ -127,3 +128,10 @@ STATICFILES_DIRS = [
 
 # Authentication
 AUTH_USER_MODEL = 'member.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
