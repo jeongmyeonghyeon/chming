@@ -15,9 +15,10 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'pk',
-            'email',
+            'username',
             'nickname',
             'profile_img',
+            'gender',
             'birth_year',
             'birth_month',
             'birth_day',
@@ -32,16 +33,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'pk',
-            'email',
-            'password1',
-            'password2',
+            'username',
             'nickname',
             'profile_img',
+            'gender',
             'birth_year',
             'birth_month',
             'birth_day',
             'hobby',
             'region',
+            'joined_group',
         )
 
 
@@ -55,6 +56,12 @@ class UserCreationSerializer(serializers.Serializer):
     birth_year = serializers.IntegerField()
     birth_month = serializers.IntegerField()
     birth_day = serializers.IntegerField()
+    hobby = serializers.CharField(
+        max_length=100,
+    )
+    region = serializers.CharField(
+        max_length=100,
+    )
 
     def validate_username(self, username):
         if User.objects.filter(username=username).exists():
@@ -73,6 +80,8 @@ class UserCreationSerializer(serializers.Serializer):
         birth_year = self.validated_data.get('birth_year', '')
         birth_month = self.validated_data.get('birth_month', '')
         birth_day = self.validated_data.get('birth_day', '')
+        hobby = self.validated_data.get('hobby', '')
+        region = self.validated_data.get('region', '')
         user = User.objects.create_user(
             username=email,
             nickname=nickname,
@@ -80,5 +89,7 @@ class UserCreationSerializer(serializers.Serializer):
             birth_year=birth_year,
             birth_month=birth_month,
             birth_day=birth_day,
+            hobby=hobby,
+            region=region,
         )
         return user
