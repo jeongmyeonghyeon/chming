@@ -39,3 +39,4 @@ termcolor==1.1.0
 traitlets==4.3.2
 wcwidth==0.1.7
 websocket-client==0.44.0
+django-cors-headers==2.1.0
