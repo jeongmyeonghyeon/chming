@@ -27,6 +27,7 @@ MEDIA_URL = '/media/'
 DEBUG = False
 ALLOWED_HOSTS = config_secret_deploy['django']['allowed_hosts']
 
+
 DATABASES = config_secret_deploy['django']['databases']
 
 print('@@@@@@ DEBUG:', DEBUG)
