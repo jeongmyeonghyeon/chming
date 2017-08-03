@@ -20,5 +20,5 @@ from .. import apis
 
 urlpatterns = [
     url(r'^$', apis.PostListCreateView.as_view()),
-    # url(r'^(?P<pk>\d+)/$', include()),
+    url(r'^(?P<pk>\d+)/$', apis.PostRetrieveUpdateDestroyAPIView.as_view()),
 ]
