@@ -21,4 +21,5 @@ from group.apis.group import GroupListCreateView, GroupRetrieveUpdateDestroyView
 urlpatterns = [
     url(r'^$', GroupListCreateView.as_view()),
     url(r'^(?P<pk>\d+)/$', GroupRetrieveUpdateDestroyView.as_view()),
+    url(r'^(?P<group_pk>\d+)/post/', include('post.urls.urls_apis')),
 ]
