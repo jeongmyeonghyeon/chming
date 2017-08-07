@@ -11,17 +11,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # CONFIG_SECRET_COMMON_FILE (.config_secret/settings_common.json)을 읽어옴
         config_secret_common = json.loads(open(settings.CONFIG_SECRET_COMMON_FILE).read())
-        username = config_secret_common['django']['default_superuser']['username']
-        password = config_secret_common['django']['default_superuser']['password']
         email = config_secret_common['django']['default_superuser']['email']
+        # username = config_secret_common['django']['default_superuser']['username']
+        password = config_secret_common['django']['default_superuser']['password']
         # 만약 username에 해당하는 User가 없을 경우
-        if not User.objects.filter(username=username).exists():
-            # 해당 username으로 superuser를 생성
+        if not User.objects.filter(email=email).exists():
+            # 해당 email으로 superuser를 생성
             User.objects.create_superuser(
-                username=username,
+                email=email,
                 password=password,
-                email=email
             )
-            print('Superuser %s created' % username)
+            print('Superuser %s created' % email)
         else:
-            print('Superuser %s is already exist' % username)
+            print('Superuser %s is already exist' % email)
