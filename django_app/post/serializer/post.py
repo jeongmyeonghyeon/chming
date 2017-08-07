@@ -5,7 +5,6 @@ from member.serializer import UserSerializer
 from ..serializer.comment import CommentSerializer
 from ..models import Post
 
-
 __all__ = (
     'PostSerializer',
 )
@@ -13,7 +12,7 @@ __all__ = (
 
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    comments = CommentSerializer(read_only=True, many=True)
+    # comments = CommentSerializer(read_only=True, many=True)
     group = GroupSerializer(read_only=True)
 
     class Meta:
@@ -24,7 +23,8 @@ class PostSerializer(serializers.ModelSerializer):
             'img',
             'title',
             'content',
-            'comments',
+            # 'comments',
+            'group',
         )
         read_only_fields = (
             'author',

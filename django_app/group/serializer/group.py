@@ -21,3 +21,4 @@ class GroupSerializer(serializers.ModelSerializer):
             'lat',
             'lng',
         )
+
