@@ -22,7 +22,8 @@ from .. import apis
 urlpatterns = [
     url(r'^$', apis.UserListCreateView.as_view()),
     url(r'^(?P<pk>\d+)/$', apis.UserRetrieveUpdateDestroyView.as_view()),
-    url(r'^login/', views.obtain_auth_token),
-    url(r'^logout/', apis.Logout.as_view()),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    url(r'^signup/$', apis.UserSignupView.as_view()),
+    url(r'^login/$', apis.ObtainAuthToken.as_view()),
+    url(r'^logout/$', apis.Logout.as_view()),
 ]
