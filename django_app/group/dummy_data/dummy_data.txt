@@ -1,0 +1,7 @@
+Group.objects.create(hobby='football', author=u, group_name='신사FC1', lat='37.5243767', lng='127.025280')
+Group.objects.create(hobby='football', author=u, group_name='신사FC2', lat='37.5243767', lng='127.025280')
+Group.objects.create(hobby='football', author=u, group_name='신사FC3', lat='37.5243777', lng='127.025270')
+Group.objects.create(hobby='football', author=u, group_name='신사FC4', lat='37.5243787', lng='127.025260')
+Group.objects.create(hobby='football', author=u, group_name='신사FC5', lat='37.5243797', lng='127.025250')
+
+Group.objects.create(hobby='football', author=u, group_name='이촌FC2', lat='37.5253997', lng='126.9710441')

@@ -16,10 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from group.apis.group import GroupListCreateView, GroupRetrieveUpdateDestroyView
+from ..apis import group
 
 urlpatterns = [
-    url(r'^$', GroupListCreateView.as_view()),
-    url(r'^(?P<pk>\d+)/$', GroupRetrieveUpdateDestroyView.as_view()),
+    url(r'^list/$', group.GroupListCreateView.as_view()),
+    url(r'^$', group.MainGroupListView.as_view()),
+    url(r'^(?P<pk>\d+)/$', group.GroupRetrieveUpdateDestroyView.as_view()),
     url(r'^(?P<group_pk>\d+)/post/', include('post.urls.urls_apis')),
 ]
