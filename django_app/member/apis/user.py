@@ -89,4 +89,4 @@ class UserRetrieveDestroyView(generics.RetrieveDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        return Response({"message":"유저 삭제 성공"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "유저가 삭제되었습니다."})
