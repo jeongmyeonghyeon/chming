@@ -1,5 +1,11 @@
 from django.db import models
 
+from config.settings import base
+from utils.fields import CustomImageField
+from utils.group import distance_calculator
+from math import sin, cos, sqrt, atan2, radians
+
+
 # Group
 # 	pk
 # 	hobby			    CharField
@@ -18,9 +24,6 @@ from django.db import models
 # 	user			    ForeignKey(settings.AUTH_USER_MODEL)
 # 	created_date		DateTimeField	        				auto_now_add
 
-from config.settings import base
-from utils.fields import CustomImageField
-
 
 class Group(models.Model):
     hobby = models.CharField(max_length=100)
@@ -35,13 +38,35 @@ class Group(models.Model):
         through='GroupLike',
         related_name='like_groups',
     )
+    lat = models.DecimalField(max_digits=9, decimal_places=6, default=0)
+    lng = models.DecimalField(max_digits=9, decimal_places=6, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-    lat = models.FloatField()
-    lng = models.FloatField()
 
     def __str__(self):
         return self.group_name
+
+    def get_distance(self, origin_lat, origin_lng):
+        target_lat = self.lat
+        target_lng = self.lng
+        # return distance_calculator(origin_lat, origin_lng, target_lat, target_lng)
+        R = 6373.0
+
+        origin_lat = radians(origin_lat)
+        origin_lng = radians(origin_lng)
+        target_lat = radians(target_lat)
+        target_lng = radians(target_lng)
+
+        dlon = target_lng - origin_lng
+        dlat = target_lat - origin_lat
+
+        a = sin(dlat / 2) ** 2 + cos(origin_lat) * cos(target_lat) * sin(dlon / 2) ** 2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        distance = R * c
+        # 1 = 1 km
+        # 0.5 = 5,00 m
+        return distance
 
 
 class GroupLike(models.Model):
