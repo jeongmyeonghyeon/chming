@@ -1,4 +1,5 @@
 from rest_framework import parsers, renderers
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from ..serializer import AuthTokenSerializer
 from rest_framework.response import Response

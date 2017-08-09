@@ -1,12 +1,11 @@
-from curses.ascii import isdigit
-
-from django.core.validators import MaxValueValidator
 from rest_framework import serializers
+from rest_framework.serializers import raise_errors_on_nested_writes
 
 from ..models import User
 
 __all__ = (
     'UserSerializer',
+    'UserSignupUpdateSerializer',
 )
 
 
@@ -29,89 +28,78 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
-class UserUpdateSerializer(serializers.ModelSerializer):
+class UserSignupUpdateSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super(UserSignupUpdateSerializer, self).__init__(*args, **kwargs)
+        self.fields['email'].error_messages['blank'] = '이 항목을 채워주세요.'
+        # self.fields['email'].error_messages['invalid'] = '유효한 이메일 주소가 아닙니다.'
+        self.fields['username'].error_messages['blank'] = '이 항목을 채워주세요.'
+
+    confirm_password = serializers.CharField(allow_blank=False, write_only=True)
+    lat = serializers.FloatField()
+    lng = serializers.FloatField()
+
+    def validate(self, data):
+        """
+        Checks to be sure that the received password and confirm_password
+        fields are exactly the same
+        """
+        if data['password'] != data.pop('confirm_password'):
+            raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
+        return data
+
+    def create(self, validated_data):
+        """
+        Creates the user if validation succeeds
+        """
+        # is_valid() 를 통해 생성된 validated_data 에서 set_password 를 위한 password 만 pop으로 추출
+        password = validated_data.pop('password', None)
+        # password를 제외한 user instance 생성
+        # User({'email': 'testuser91@ex.com', 'username': 'testuser91', 'profile_img': <InMemoryUploadedFile: 영화,은교003.jpg (image/jpeg)>, 'gender': 'm', 'birth_year': 1986, 'birth_month': 8, 'birth_day': 4, 'hobby': 'football', 'add': '서울시 강남구 신사동', 'lat': 37.5215207, 'lng': 127.0205784})
+        user = self.Meta.model(**validated_data)
+        # set_password 를 통해 비밀번호 해시
+        user.set_password(password)
+        # 데이터베이스에 저장
+        # return user 를 주석처리해도 데이터베이스에는 유저가 추가됨...
+        user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        raise_errors_on_nested_writes('update', self, validated_data)
+        # info = model_meta.get_field_info(instance)
+
+        password = validated_data.pop('password', None)
+        for attr, value in validated_data.items():
+            # # 다대다 관계에 대한 어떤 처리를 다룬 것 같다.
+            # # 그게 구체적으로 어떤 처리인지 모르겠다. (아마 다대다 관계의 인스턴스의 필드를 불러와 그 부분까지 수정해주는 정도로 이해된다.
+            # # 주석처리해도 작동한다.
+            # # 관계에 대한 검사를 하지 않으므로, instnace의 정보를 가져오는 info 인스턴스 역시 사용할 필요가 없어졌다.
+            # if attr in info.relations and info.relations[attr].to_many:
+            #     set_many(instance, attr, value)
+            # else:
+
+            # setattr(x, 'y', v) is equivalent to ``x.y = v''
+            setattr(instance, attr, value)
+        instance.set_password(password)
+        instance.save()
+
+        return instance
+
     class Meta:
         model = User
         fields = (
             'pk',
+            'email',
             'username',
-            'nickname',
+            'password',
+            'confirm_password',
             'profile_img',
             'gender',
             'birth_year',
             'birth_month',
             'birth_day',
             'hobby',
-            'region',
-            'joined_group',
+            'address',
+            'lat',
+            'lng',
         )
-
-
-class UserCreationSerializer(serializers.Serializer):
-    # Custom default error messages
-    def __init__(self, *args, **kwargs):
-        super(UserCreationSerializer, self).__init__(*args, **kwargs)
-        self.fields['email'].error_messages['blank'] = '이 항목을 채워주세요.'
-        # self.fields['email'].error_messages['invalid'] = '유효한 이메일 주소가 아닙니다.'
-        self.fields['username'].error_messages['blank'] = '이 항목을 채워주세요.'
-
-    email = serializers.EmailField(error_messages={'invalid': '유효한 이메일 주소가 아닙니다.'})
-    username = serializers.CharField(max_length=100)
-    profile_img = serializers.ImageField()
-    password1 = serializers.CharField()
-    password2 = serializers.CharField(write_only=True)
-    gender = serializers.CharField(max_length=1)
-    birth_year = serializers.IntegerField()
-    birth_month = serializers.IntegerField()
-    birth_day = serializers.IntegerField()
-    hobby = serializers.CharField(max_length=100)
-    address = serializers.CharField(max_length=100)
-    lat = serializers.FloatField()
-    lng = serializers.FloatField()
-
-    def validate_email(self, email):
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError('해당 사용자 이메일은 이미 존재합니다.')
-        return email
-
-    def validate(self, data):
-        if data['password1'] != data['password2']:
-            raise serializers.ValidationError('비밀번호가 일치하지 않습니다.')
-        return data
-
-    def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password)
-        instance.save()
-        return instance
-
-    def save(self, *args, **kwargs):
-        email = self.validated_data.get('email', '')
-        username = self.validated_data.get('username', '')
-        profile_img = self.validated_data.get('profile_img', '')
-        gender = self.validated_data.get('gender', '')
-        password = self.validated_data.get('password1', '')
-        birth_year = self.validated_data.get('birth_year', '')
-        birth_month = self.validated_data.get('birth_month', '')
-        birth_day = self.validated_data.get('birth_day', '')
-        hobby = self.validated_data.get('hobby', '')
-        address = self.validated_data.get('address', '')
-        lat = self.validated_data.get('lat', '')
-        lng = self.validated_data.get('lng', '')
-        user = User.objects.create_user(
-            email=email,
-            username=username,
-            profile_img=profile_img,
-            gender=gender,
-            password=password,
-            birth_year=birth_year,
-            birth_month=birth_month,
-            birth_day=birth_day,
-            hobby=hobby,
-            address=address,
-            lat=lat,
-            lng=lng,
-        )
-        return user

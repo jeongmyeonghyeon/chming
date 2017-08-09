@@ -22,7 +22,6 @@ class Logout(APIView):
 
     def logout(self, request):
         try:
-            print('@@@@@@@@@@', request.user)
             request.user.auth_token.delete()
         except (AttributeError, ObjectDoesNotExist):
             return Response({"detail": _("제공된 토큰이 없습니다")}, status=status.HTTP_401_UNAUTHORIZED)
