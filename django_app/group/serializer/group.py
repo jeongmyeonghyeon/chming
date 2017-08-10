@@ -22,3 +22,12 @@ class GroupSerializer(serializers.ModelSerializer):
             'lng',
         )
 
+
+class MainGroupListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = (
+            'pk',
+            'lat',
+            'lng',
+        )
