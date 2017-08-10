@@ -1,32 +1,51 @@
 from rest_framework import serializers
 
-from group.serializer.group import GroupSerializer
-from member.serializer import UserSerializer
-from ..serializer.comment import CommentSerializer
-from ..models import Post
-
+from member.models import User
+from ..models import Post, Comment
 
 __all__ = (
     'PostSerializer',
 )
 
 
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            # 'nickname',
+        )
+
+
+class SimpleCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = (
+            'pk',
+            'content',
+            'created_date',
+        )
+
+
 class PostSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-    comments = CommentSerializer(read_only=True, many=True)
-    group = GroupSerializer(read_only=True)
+    author = SimpleUserSerializer(read_only=True)
+    comment_set = SimpleCommentSerializer(read_only=True, many=True)
 
     class Meta:
         model = Post
         fields = (
             'pk',
-            'author',
-            'img',
+            'post_type',
             'title',
             'content',
-            'comments',
+            'img',
+            'author',
+            'comment_set',
+            'created_date',
+            # 'like_count',
+            # 'comments_count',
+            # 'hit_count',
         )
         read_only_fields = (
             'author',
-            'group',
         )
