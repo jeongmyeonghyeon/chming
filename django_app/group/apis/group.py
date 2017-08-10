@@ -32,10 +32,11 @@ class MainGroupListView(generics.ListAPIView):
     serializer_class = MainGroupListSerializer
 
     def get_queryset(self):
+        # 로그인한 유저의 모임 필터링
         if not is_anonymous(self.request.user):
             user_hobby = self.request.user.hobby
-            origin_lat = self.request.user.lat
-            origin_lng = self.request.user.lng
+            origin_lat = float(self.request.GET.get('lat', self.request.user.lat))
+            origin_lng = float(self.request.GET.get('lng', self.request.user.lng))
             distance_limit = float(self.request.GET.get('distance_limit', 0.5))
             groups = Group.objects.iterator()
             filter_group_pk_list = []
@@ -44,6 +45,7 @@ class MainGroupListView(generics.ListAPIView):
                 if distance < distance_limit:
                     filter_group_pk_list.append(group.pk)
             return Group.objects.filter(Q(pk__in=filter_group_pk_list), Q(hobby=user_hobby))
+        # 비로그인 유저(anonymous user)의 필터링
         else:
             # query string 으로 위도, 경도, 반경을 받는다.
             # request.GET 의 키값을 사용
