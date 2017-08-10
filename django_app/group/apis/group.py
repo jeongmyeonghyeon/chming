@@ -1,7 +1,8 @@
 from django.db.models import Q
-from requests import Response
+
 from rest_framework import generics, permissions, status
 from rest_framework.compat import is_anonymous
+from rest_framework.response import Response
 
 from group.serializer.group import GroupSerializer, MainGroupListSerializer
 from utils.permissions import AuthorIsRequestUser
