@@ -3,6 +3,7 @@ from rest_framework import serializers
 from member.models import User
 from ..models import Post, Comment
 
+
 __all__ = (
     'PostSerializer',
 )
@@ -45,6 +46,7 @@ class PostSerializer(serializers.ModelSerializer):
             # 'like_count',
             # 'comments_count',
             # 'hit_count',
+
         )
         read_only_fields = (
             'author',
