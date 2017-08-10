@@ -19,7 +19,7 @@ from django.contrib import admin
 from ..apis import group
 
 urlpatterns = [
-    url(r'^list/$', group.GroupListCreateView.as_view()),
+    url(r'^register/$', group.GroupCreateView.as_view()),
     url(r'^$', group.MainGroupListView.as_view()),
     url(r'^(?P<pk>\d+)/$', group.GroupRetrieveUpdateDestroyView.as_view()),
     url(r'^(?P<group_pk>\d+)/post/', include('post.urls.urls_apis')),

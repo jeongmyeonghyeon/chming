@@ -6,6 +6,8 @@ from ..models import Group
 
 class GroupSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
+    lat = serializers.FloatField()
+    lng = serializers.FloatField()
 
     class Meta:
         model = Group

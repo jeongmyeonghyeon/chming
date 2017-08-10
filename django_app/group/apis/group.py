@@ -1,5 +1,6 @@
 from django.db.models import Q
-from rest_framework import generics, permissions
+from requests import Response
+from rest_framework import generics, permissions, status
 from rest_framework.compat import is_anonymous
 
 from group.serializer.group import GroupSerializer, MainGroupListSerializer
@@ -9,23 +10,6 @@ from ..models import Group
 __all__ = (
     'MainGroupListView',
 )
-
-
-class GroupListCreateView(generics.ListCreateAPIView):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
-
-class GroupRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        AuthorIsRequestUser,
-    )
 
 
 class MainGroupListView(generics.ListAPIView):
@@ -70,3 +54,30 @@ class MainGroupListView(generics.ListAPIView):
             print('@@@@@ 필터링 된 그룹들의 pk 리스트: ', filter_group_pk_list)
             # __in 을 통해 serializer 에 사용할 queryset 반환
             return Group.objects.filter(pk__in=filter_group_pk_list)
+
+
+class GroupCreateView(generics.CreateAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class GroupRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        AuthorIsRequestUser,
+    )
