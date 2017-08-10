@@ -13,12 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
-from django.contrib import admin
+from django.conf.urls import url
 
 from .. import apis
 
 urlpatterns = [
-    url(r'^$', apis.PostListCreateView.as_view()),
-    url(r'^(?P<pk>\d+)/$', apis.PostRetrieveUpdateDestroyAPIView.as_view()),
+    url(r'^$', apis.PostListView.as_view()),
+    url(r'^create/$', apis.PostCreateView.as_view()),
+    url(r'^(?P<pk>\d+)/$', apis.PostRetrieveAPIView.as_view()),
+    url(r'^(?P<pk>\d+)/modify/$', apis.PostUpdateAPIView.as_view()),
+    url(r'^(?P<pk>\d+)/delete/$', apis.PostDestroyAPIView.as_view()),
+
+    url(r'^(?P<pk>\d+)/comment/$', apis.CommentListView.as_view()),
+    url(r'^(?P<pk>\d+)/comment/create/$', apis.CommentCreateView.as_view()),
+    url(r'^comment/(?P<pk>\d+)/delete/$', apis.CommentDeleteView.as_view()),
+
 ]
