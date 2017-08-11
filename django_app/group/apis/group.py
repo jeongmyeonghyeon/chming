@@ -57,6 +57,10 @@ class MainGroupListView(generics.ListAPIView):
             return Group.objects.filter(pk__in=filter_group_pk_list)
 
 
+class AllGroupListView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
 class GroupRegisterView(generics.CreateAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
