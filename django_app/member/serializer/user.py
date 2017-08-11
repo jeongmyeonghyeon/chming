@@ -10,6 +10,24 @@ __all__ = (
 )
 
 
+class UserPKSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+        )
+
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'profile_img',
+            'username',
+        )
+
+
 class UserSerializer(serializers.ModelSerializer):
     hobby = CustomListField()
 
