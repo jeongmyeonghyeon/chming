@@ -4,10 +4,11 @@ from group.models import Group
 from utils.permissions import AuthorIsRequestUser
 from ..models import Post, Comment
 
-from ..serializer import PostSerializer
+from ..serializer import PostSerializer, PostDetailSerializer
 
 __all__ = (
     'PostListView',
+    'PostImageListView',
     'PostCreateView',
     'PostRetrieveAPIView',
     'PostUpdateAPIView',
@@ -22,6 +23,15 @@ class PostListView(generics.ListAPIView):
         group_pk = self.kwargs['group_pk']
         group = Group.objects.get(pk=group_pk)
         return Post.objects.filter(group=group)
+
+
+class PostImageListView(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        group_pk = self.kwargs['group_pk']
+        group = Group.objects.get(pk=group_pk)
+        return Post.objects.filter(group=group).exclude(img='')
 
 
 class PostCreateView(generics.CreateAPIView):
@@ -47,7 +57,7 @@ class PostCreateView(generics.CreateAPIView):
 
 
 class PostRetrieveAPIView(generics.RetrieveAPIView):
-    serializer_class = PostSerializer
+    serializer_class = PostDetailSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         AuthorIsRequestUser,
