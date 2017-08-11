@@ -19,6 +19,7 @@ from .. import apis
 
 urlpatterns = [
     url(r'^$', apis.PostListView.as_view()),
+    url(r'^img/$', apis.PostImageListView.as_view()),
     url(r'^create/$', apis.PostCreateView.as_view()),
     url(r'^(?P<pk>\d+)/$', apis.PostRetrieveAPIView.as_view()),
     url(r'^(?P<pk>\d+)/modify/$', apis.PostUpdateAPIView.as_view()),
