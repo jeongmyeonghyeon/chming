@@ -24,7 +24,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 # 배포모드니까 DEBUG는 True
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = config_secret_deploy['django']['allowed_hosts']
 
 
