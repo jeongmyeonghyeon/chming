@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from ..apis import group, region
+from ..apis import group, region, hobby
 
 urlpatterns = [
     # Group API
@@ -29,4 +29,7 @@ urlpatterns = [
 
     # Region API
     url(r'^region/$', region.RegionListView.as_view()),
+
+    # Hobby API
+    url(r'^hobby/$', hobby.HobbyListView.as_view())
 ]

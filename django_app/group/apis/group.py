@@ -4,7 +4,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.compat import is_anonymous
 from rest_framework.response import Response
 
-from group.serializer.group import GroupSerializer, MainGroupListSerializer
+from group.serializer.group import GroupSerializer, MainGroupListSerializer, GroupDetailSerializer
 from utils.permissions import AuthorIsRequestUser
 from ..models import Group
 
@@ -59,7 +59,8 @@ class MainGroupListView(generics.ListAPIView):
 
 class AllGroupListView(generics.ListAPIView):
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = GroupDetailSerializer
+
 
 class GroupRegisterView(generics.CreateAPIView):
     queryset = Group.objects.all()
@@ -84,5 +85,5 @@ class GroupRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GroupSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
-        AuthorIsRequestUser,
+        # AuthorIsRequestUser,
     )
