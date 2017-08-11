@@ -57,7 +57,7 @@ class MainGroupListView(generics.ListAPIView):
             return Group.objects.filter(pk__in=filter_group_pk_list)
 
 
-class GroupCreateView(generics.CreateAPIView):
+class GroupRegisterView(generics.CreateAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (
@@ -69,7 +69,7 @@ class GroupCreateView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({"pk": serializer.data['pk']}, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
