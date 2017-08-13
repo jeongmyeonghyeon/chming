@@ -99,6 +99,14 @@ class UserProfileView(APIView):
         serializer = UserSerializer(instance)
         return Response(serializer.data)
 
+    def put(self, request, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = Token.objects.get(key=request._auth).user
+        serializer = UserSignupUpdateSerializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"pk": instance.pk})
+
     permission_classes = (
         permissions.IsAuthenticated,
     )

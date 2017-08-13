@@ -9,14 +9,15 @@ from ..models import Group
 class GroupSerializer(serializers.ModelSerializer):
     lat = serializers.FloatField()
     lng = serializers.FloatField()
+
     class Meta:
         model = Group
         fields = (
             'pk',
-            'hobby',
+            'interest',
             'group_img',
-            'group_name',
-            'group_introduce',
+            'name',
+            'description',
             'address',
             'lat',
             'lng',
@@ -24,7 +25,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class GroupDetailSerializer(serializers.ModelSerializer):
-    hobby = CustomListField()
+    interest = CustomListField()
     author = SimpleUserSerializer(read_only=True)
     lat = serializers.FloatField()
     lng = serializers.FloatField()
@@ -35,10 +36,10 @@ class GroupDetailSerializer(serializers.ModelSerializer):
         model = Group
         fields = (
             'pk',
-            'hobby',
-            'group_name',
+            'interest',
+            'name',
             'group_img',
-            'group_introduce',
+            'description',
             'address',
             'lat',
             'lng',

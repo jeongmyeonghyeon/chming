@@ -29,7 +29,7 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    interest = CustomListField()
+    hobby = CustomListField()
 
     class Meta:
         model = User
@@ -42,7 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
             'birth_year',
             'birth_month',
             'birth_day',
-            'interest',
+            'hobby',
             'address',
             'lat',
             'lng',
@@ -76,7 +76,7 @@ class UserSignupUpdateSerializer(serializers.ModelSerializer):
         # is_valid() 를 통해 생성된 validated_data 에서 set_password 를 위한 password 만 pop으로 추출
         password = validated_data.pop('password', None)
         # password를 제외한 user instance 생성
-        # User({'email': 'testuser91@ex.com', 'username': 'testuser91', 'profile_img': <InMemoryUploadedFile: 영화,은교003.jpg (image/jpeg)>, 'gender': 'm', 'birth_year': 1986, 'birth_month': 8, 'birth_day': 4, 'interest': 'football', 'add': '서울시 강남구 신사동', 'lat': 37.5215207, 'lng': 127.0205784})
+        # User({'email': 'testuser91@ex.com', 'username': 'testuser91', 'profile_img': <InMemoryUploadedFile: 영화,은교003.jpg (image/jpeg)>, 'gender': 'm', 'birth_year': 1986, 'birth_month': 8, 'birth_day': 4, 'hobby': 'football', 'add': '서울시 강남구 신사동', 'lat': 37.5215207, 'lng': 127.0205784})
         user = self.Meta.model(**validated_data)
         # set_password 를 통해 비밀번호 해시
         user.set_password(password)
@@ -119,7 +119,7 @@ class UserSignupUpdateSerializer(serializers.ModelSerializer):
             'birth_year',
             'birth_month',
             'birth_day',
-            'interest',
+            'hobby',
             'address',
             'lat',
             'lng',
