@@ -27,6 +27,6 @@ urlpatterns = [
     url(r'^profile/$', apis.UserProfileView.as_view()),
     url(r'^delete/$', apis.UserDeleteView.as_view()),
 
-    url(r'^valid_email/$', apis.IsValidEmailView.as_view()),
+    url(r'^validate_email/$', apis.IsValidEmailView.as_view()),
 
 ]
