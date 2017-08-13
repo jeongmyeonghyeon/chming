@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from group.serializer.group import GroupSerializer, MainGroupListSerializer, GroupDetailSerializer
+from group.pagination import GroupPagination
 from utils.permissions import AuthorIsRequestUser
 from ..models import Group
 
@@ -24,6 +25,7 @@ __all__ = (
 
 class MainGroupListView(generics.ListAPIView):
     serializer_class = MainGroupListSerializer
+    pagination_class = GroupPagination
 
     def get_queryset(self):
         # 로그인한 유저의 모임 필터링
@@ -69,6 +71,7 @@ class MainGroupListView(generics.ListAPIView):
 class AllGroupListView(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupDetailSerializer
+    pagination_class = GroupPagination
 
 
 class GroupRegisterView(generics.CreateAPIView):

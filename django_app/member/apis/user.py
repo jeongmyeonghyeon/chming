@@ -4,6 +4,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+# from member.pagination import UserPagination
 from utils.permissions import ObjectIsRequestUser
 from ..serializer import UserSerializer, UserSignupUpdateSerializer
 from ..models import User
@@ -20,6 +21,7 @@ __all__ = (
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    # pagination_class = UserPagination
 
 
 class UserSignupView(generics.CreateAPIView):
