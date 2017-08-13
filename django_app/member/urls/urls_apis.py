@@ -24,7 +24,8 @@ urlpatterns = [
     url(r'^login/$', apis.ObtainAuthToken.as_view()),
     url(r'^logout/$', apis.Logout.as_view()),
     # User - Detail/Delete
-    url(r'^(?P<pk>\d+)/$', apis.UserRetrieveDestroyView.as_view()),
+    # url(r'^(?P<pk>\d+)/$', apis.UserRetrieveDestroyView.as_view()),
+    url(r'^profile/$', apis.UserProfileView.as_view()),
     # User - Update
     url(r'^(?P<pk>\d+)/edit/$', apis.UserUpdateView.as_view()),
 

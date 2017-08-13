@@ -13,6 +13,7 @@ __all__ = (
     'UserSignupView',
     'UserUpdateView',
     'UserRetrieveDestroyView',
+    'UserProfileView',
 )
 
 
@@ -90,3 +91,14 @@ class UserRetrieveDestroyView(generics.RetrieveDestroyAPIView):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response({"detail": "유저가 삭제되었습니다."})
+
+
+class UserProfileView(APIView):
+    def get(self, request):
+        instance = Token.objects.get(key=request._auth).user
+        serializer = UserSerializer(instance)
+        return Response(serializer.data)
+
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )
