@@ -1,9 +1,9 @@
 from rest_framework import generics
 
-from group.serializer.region import RegionSerializer
+from group.serializer.hobby import HobbySerializer
 from ..models import Hobby
 
 
 class HobbyListView(generics.ListAPIView):
     queryset = Hobby.objects.all()
-    serializer_class = RegionSerializer
+    serializer_class = HobbySerializer
