@@ -14,8 +14,8 @@ class GroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = (
             'pk',
-            'interest',
-            'group_img',
+            'hobby',
+            'image',
             'name',
             'description',
             'address',
@@ -25,20 +25,20 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class GroupDetailSerializer(serializers.ModelSerializer):
-    interest = CustomListField()
+    hobby = CustomListField()
     author = SimpleUserSerializer(read_only=True)
     lat = serializers.FloatField()
     lng = serializers.FloatField()
-    member = SimpleUserSerializer(many=True)
+    members = SimpleUserSerializer(many=True)
     like_users = SimpleUserSerializer(many=True)
 
     class Meta:
         model = Group
         fields = (
             'pk',
-            'interest',
+            'hobby',
             'name',
-            'group_img',
+            'image',
             'description',
             'address',
             'lat',
@@ -46,7 +46,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
             'author',
             'created_date',
             'modified_date',
-            'member',
+            'members',
             'like_users',
 
         )

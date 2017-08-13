@@ -20,12 +20,15 @@ from ..apis import group, region, hobby
 
 urlpatterns = [
     # Group API
-    url(r'^register/$', group.GroupRegisterView.as_view()),
     url(r'^$', group.MainGroupListView.as_view()),
-    url(r'^(?P<pk>\d+)/$', group.GroupRetrieveUpdateDestroyView.as_view()),
-    url(r'^(?P<group_pk>\d+)/post/', include('post.urls.urls_apis')),
-
     url(r'^all/$', group.AllGroupListView.as_view()),
+    url(r'^register/$', group.GroupRegisterView.as_view()),
+    url(r'^(?P<pk>\d+)/$', group.GroupRetrieveView.as_view()),
+    url(r'^(?P<group_pk>\d+)/edit/$', group.GroupUpdateView.as_view()),
+    url(r'^(?P<group_pk>\d+)/delete/$', group.GroupDestroyView.as_view()),
+
+    # Post API
+    url(r'^(?P<group_pk>\d+)/post/', include('post.urls.urls_apis')),
 
     # Region API
     url(r'^region/$', region.RegionListView.as_view()),

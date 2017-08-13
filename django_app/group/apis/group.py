@@ -2,7 +2,9 @@ from django.db.models import Q
 
 from rest_framework import generics, permissions, status
 from rest_framework.compat import is_anonymous
+from rest_framework.exceptions import APIException
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from group.serializer.group import GroupSerializer, MainGroupListSerializer, GroupDetailSerializer
 from utils.permissions import AuthorIsRequestUser
@@ -10,6 +12,11 @@ from ..models import Group
 
 __all__ = (
     'MainGroupListView',
+    'AllGroupListView',
+    'GroupRegisterView',
+    'GroupRetrieveView',
+    'GroupUpdateView',
+    'GroupDestroyView',
 )
 
 
@@ -80,10 +87,48 @@ class GroupRegisterView(generics.CreateAPIView):
         serializer.save(author=self.request.user)
 
 
-class GroupRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class GroupRetrieveView(generics.RetrieveAPIView):
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = GroupDetailSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
-        # AuthorIsRequestUser,
     )
+
+
+class GroupUpdateView(APIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        AuthorIsRequestUser
+    )
+
+    def put(self, request, group_pk, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = Group.objects.get(pk=group_pk)
+        serializer = GroupSerializer(instance, data=request.data, partial=partial)
+        if request.user == instance.author:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        else:
+            raise APIException({"detail": "권한이 없습니다."})
+        ret = {
+            "pk": serializer.data['pk']
+        }
+        return Response(ret)
+
+
+class GroupDestroyView(APIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
+
+    def delete(self, request, group_pk):
+        instance = Group.objects.get(pk=group_pk)
+
+        if request.user == instance.author:
+            instance.delete()
+        else:
+            raise APIException({"detail": "권한이 없습니다."})
+        ret = {
+            "detail": "모임이 삭제되었습니다."
+        }
+        return Response(ret)
