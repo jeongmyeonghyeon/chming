@@ -23,10 +23,10 @@ urlpatterns = [
     url(r'^signup/$', apis.UserSignupView.as_view()),
     url(r'^login/$', apis.ObtainAuthToken.as_view()),
     url(r'^logout/$', apis.Logout.as_view()),
-    # User - Detail/Delete
-    # url(r'^(?P<pk>\d+)/$', apis.UserRetrieveDestroyView.as_view()),
+    # User - Detail/Update/Delete
     url(r'^profile/$', apis.UserProfileView.as_view()),
-    # User - Update
-    url(r'^(?P<pk>\d+)/edit/$', apis.UserUpdateView.as_view()),
+    url(r'^delete/$', apis.UserDeleteView.as_view()),
+
+    url(r'^valid_email/$', apis.IsValidEmailView.as_view()),
 
 ]
