@@ -31,9 +31,9 @@ class Group(models.Model):
         base.AUTH_USER_MODEL,
         related_name='open_group'
     )
-    group_name = models.CharField(max_length=100)
-    group_introduce = models.TextField()
-    group_img = CustomImageField(
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    image = CustomImageField(
         upload_to='group/%Y/%m/%d',
         blank=True,
     )
@@ -47,16 +47,16 @@ class Group(models.Model):
     lng = models.DecimalField(max_digits=9, decimal_places=6, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-    member = models.ManyToManyField('member.User')
+    members = models.ManyToManyField('member.User')
 
     def __str__(self):
-        return self.group_name
+        return self.name
 
     def get_all_member(self):
-        return self.member.all()
+        return self.members.all()
 
     def get_all_member_count(self):
-        return self.member.count()
+        return self.members.count()
 
     def get_all_like_users(self):
         return self.like_users.all()
@@ -98,4 +98,4 @@ class GroupLike(models.Model):
         )
 
     def __str__(self):
-        return '{}|{}'.format(self.group.group_name, self.user.username)
+        return '{}|{}'.format(self.group.name, self.user.username)
