@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/$', group.GroupRetrieveView.as_view()),
     url(r'^(?P<group_pk>\d+)/edit/$', group.GroupUpdateView.as_view()),
     url(r'^(?P<group_pk>\d+)/delete/$', group.GroupDestroyView.as_view()),
+    url(r'^(?P<group_pk>\d+)/like_toggle/$', group.GroupLikeToggleView.as_view()),
 
     # Post API
     url(r'^(?P<group_pk>\d+)/post/', include('post.urls.urls_apis')),

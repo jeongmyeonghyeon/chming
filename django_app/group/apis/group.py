@@ -3,6 +3,7 @@ from django.db.models import Q
 from rest_framework import generics, permissions, status
 from rest_framework.compat import is_anonymous
 from rest_framework.exceptions import APIException
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -17,6 +18,7 @@ __all__ = (
     'GroupRetrieveView',
     'GroupUpdateView',
     'GroupDestroyView',
+    'GroupLikeToggleView',
 )
 
 
@@ -132,3 +134,14 @@ class GroupDestroyView(APIView):
             "detail": "모임이 삭제되었습니다."
         }
         return Response(ret)
+
+
+class GroupLikeToggleView(APIView):
+    def post(self, request, group_pk):
+        instance = get_object_or_404(Group, pk=group_pk)
+        group_like, group_like_created = instance.grouplike_set.get_or_create(
+            user=request.user
+        )
+        if not group_like_created:
+            group_like.delete()
+        return Response({'created': group_like_created})
