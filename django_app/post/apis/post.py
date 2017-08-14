@@ -4,21 +4,22 @@ from group.models import Group
 from utils.permissions import AuthorIsRequestUser
 from ..models import Post, Comment
 
-from ..serializer import PostSerializer, PostDetailSerializer
+from ..serializer import PostSerializer, PostDetailSerializer, PostPagination
 
 __all__ = (
     'PostListView',
     'PostImageListView',
     'PostNoticeListView',
     'PostCreateView',
-    'PostRetrieveAPIView',
-    'PostUpdateAPIView',
-    'PostDestroyAPIView',
+    'PostRetrieveView',
+    'PostUpdateView',
+    'PostDestroyView',
 )
 
 
 class PostListView(generics.ListAPIView):
     serializer_class = PostSerializer
+    pagination_class = PostPagination
 
     def get_queryset(self):
         group_pk = self.kwargs['group_pk']
@@ -29,6 +30,7 @@ class PostListView(generics.ListAPIView):
 
 class PostImageListView(generics.ListAPIView):
     serializer_class = PostSerializer
+    pagination_class = PostPagination
 
     def get_queryset(self):
         group_pk = self.kwargs['group_pk']
@@ -67,7 +69,7 @@ class PostCreateView(generics.CreateAPIView):
         return Post.objects.filter(group=group)
 
 
-class PostRetrieveAPIView(generics.RetrieveAPIView):
+class PostRetrieveView(generics.RetrieveAPIView):
     serializer_class = PostDetailSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -80,7 +82,7 @@ class PostRetrieveAPIView(generics.RetrieveAPIView):
         return Post.objects.filter(group=group)
 
 
-class PostUpdateAPIView(generics.UpdateAPIView):
+class PostUpdateView(generics.UpdateAPIView):
     serializer_class = PostSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -93,7 +95,7 @@ class PostUpdateAPIView(generics.UpdateAPIView):
         return Post.objects.filter(group=group)
 
 
-class PostDestroyAPIView(generics.DestroyAPIView):
+class PostDestroyView(generics.DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = (

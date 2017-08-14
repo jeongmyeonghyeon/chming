@@ -22,12 +22,12 @@ urlpatterns = [
     url(r'^img/$', apis.PostImageListView.as_view()),
     url(r'^notice/$', apis.PostNoticeListView.as_view()),
     url(r'^create/$', apis.PostCreateView.as_view()),
-    url(r'^(?P<pk>\d+)/$', apis.PostRetrieveAPIView.as_view()),
-    url(r'^(?P<pk>\d+)/update/$', apis.PostUpdateAPIView.as_view()),
-    url(r'^(?P<pk>\d+)/delete/$', apis.PostDestroyAPIView.as_view()),
+    url(r'^(?P<pk>\d+)/$', apis.PostRetrieveView.as_view()),
+    url(r'^(?P<pk>\d+)/update/$', apis.PostUpdateView.as_view()),
+    url(r'^(?P<pk>\d+)/delete/$', apis.PostDestroyView.as_view()),
 
     url(r'^(?P<pk>\d+)/comment/$', apis.CommentListView.as_view()),
     url(r'^(?P<pk>\d+)/comment/create/$', apis.CommentCreateView.as_view()),
-    url(r'^comment/(?P<pk>\d+)/delete/$', apis.CommentDeleteView.as_view()),
+    url(r'^comment/(?P<pk>\d+)/delete/$', apis.CommentDestroyView.as_view()),
 
 ]
