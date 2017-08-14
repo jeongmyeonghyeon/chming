@@ -13,8 +13,8 @@ class Region(models.Model):
     si = models.CharField(max_length=24)
     gu = models.CharField(max_length=24)
     dong = models.CharField(max_length=24)
-    lat = models.FloatField()
-    lng = models.FloatField()
+    lat = models.DecimalField(max_digits=9, decimal_places=6, default=0)
+    lng = models.DecimalField(max_digits=9, decimal_places=6, default=0)
 
     def __str__(self):
         return '{} {} {}'.format(self.si, self.gu, self.dong)

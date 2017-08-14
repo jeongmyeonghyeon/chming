@@ -63,7 +63,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     lng = models.DecimalField(max_digits=9, decimal_places=6, default=0)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(default=False)
-    joined_group = models.ManyToManyField('group.Group')
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
@@ -79,6 +78,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         # The user is identified by their email address
         return self.email
+
+    def get_all_open_groups(self):
+        return self.open_group.all()
+
+    def get_all_like_groups(self):
+        return self.groupLike_set.all()
 
     def __str__(self):  # __unicode__ on Python 2
         return self.email

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import raise_errors_on_nested_writes
 
+from utils.fields import CustomListField
 from ..models import User
 
 __all__ = (
@@ -9,7 +10,27 @@ __all__ = (
 )
 
 
+class UserPKSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+        )
+
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'profile_img',
+            'username',
+        )
+
+
 class UserSerializer(serializers.ModelSerializer):
+    hobby = CustomListField()
+
     class Meta:
         model = User
         fields = (

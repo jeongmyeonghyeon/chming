@@ -5,6 +5,7 @@ ustom ###
 .static_root/
 .config/
 .media/
+db.sqlite3-journal
 
 # Created by https://www.gitignore.io/api/vim
 

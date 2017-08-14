@@ -14,7 +14,7 @@ STATIC_ROOT = os.path.join(ROOT_DIR, '.static_root')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(ROOT_DIR, '.media')
 
-# 디버그모드니까 DEBUG는 False
+# 디버그모드니까 DEBUG는 True
 DEBUG = True
 ALLOWED_HOSTS = config_secret_debug['django']['allowed_hosts']
 

@@ -11,6 +11,7 @@ __all__ = (
     'ObtainAuthToken',
 )
 
+
 class ObtainAuthToken(APIView):
     throttle_classes = ()
     permission_classes = ()
@@ -25,6 +26,3 @@ class ObtainAuthToken(APIView):
         token, created = Token.objects.get_or_create(user=user)
         userserializer = UserSerializer(user)
         return Response({'token': token.key, 'login_user_info': userserializer.data})
-
-
-
