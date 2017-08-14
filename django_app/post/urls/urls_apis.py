@@ -18,11 +18,12 @@ from django.conf.urls import url
 from .. import apis
 
 urlpatterns = [
-    url(r'^$', apis.PostListView.as_view()),
+    url(r'^', apis.PostListView.as_view()),
     url(r'^img/$', apis.PostImageListView.as_view()),
+    url(r'^notice/$', apis.PostNoticeListView.as_view()),
     url(r'^create/$', apis.PostCreateView.as_view()),
     url(r'^(?P<pk>\d+)/$', apis.PostRetrieveAPIView.as_view()),
-    url(r'^(?P<pk>\d+)/modify/$', apis.PostUpdateAPIView.as_view()),
+    url(r'^(?P<pk>\d+)/update/$', apis.PostUpdateAPIView.as_view()),
     url(r'^(?P<pk>\d+)/delete/$', apis.PostDestroyAPIView.as_view()),
 
     url(r'^(?P<pk>\d+)/comment/$', apis.CommentListView.as_view()),

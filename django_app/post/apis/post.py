@@ -9,6 +9,7 @@ from ..serializer import PostSerializer, PostDetailSerializer
 __all__ = (
     'PostListView',
     'PostImageListView',
+    'PostNoticeListView',
     'PostCreateView',
     'PostRetrieveAPIView',
     'PostUpdateAPIView',
@@ -22,7 +23,8 @@ class PostListView(generics.ListAPIView):
     def get_queryset(self):
         group_pk = self.kwargs['group_pk']
         group = Group.objects.get(pk=group_pk)
-        return Post.objects.filter(group=group)
+        queryset = Post.objects.filter(group=group)
+        return queryset
 
 
 class PostImageListView(generics.ListAPIView):
@@ -31,7 +33,16 @@ class PostImageListView(generics.ListAPIView):
     def get_queryset(self):
         group_pk = self.kwargs['group_pk']
         group = Group.objects.get(pk=group_pk)
-        return Post.objects.filter(group=group).exclude(img='')
+        return Post.objects.filter(group=group).exclude(post_img='')
+
+
+class PostNoticeListView(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        group_pk = self.kwargs['group_pk']
+        group = Group.objects.get(pk=group_pk)
+        return Post.objects.filter(group=group).exclude(post_type='False')
 
 
 class PostCreateView(generics.CreateAPIView):

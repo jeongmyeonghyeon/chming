@@ -39,15 +39,19 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'post_type',
             'title',
             'content',
-            'img',
+            'post_img',
             'author',
-            'comment_set',
             'created_date',
+            'modified_date',
+            'comment_set',
             # 'like_count',
             # 'hit_count',
         )
         read_only_fields = (
             'author',
+            'created_date',
+            'modified_date',
+            'comment_set',
         )
 
 
@@ -61,15 +65,19 @@ class PostSerializer(serializers.ModelSerializer):
             'post_type',
             'title',
             'content',
-            'img',
+            'post_img',
             'author',
             'created_date',
+            'modified_date',
             # 'like_count',
             # 'hit_count',
 
         )
         read_only_fields = (
             'author',
+            'created_date',
+            'modified_date',
+            'comment_set',
         )
 
     # 모델에 없는 필드 추가해서 보내기
