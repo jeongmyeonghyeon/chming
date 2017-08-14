@@ -25,7 +25,7 @@ __all__ = (
 
 
 class MainGroupListView(APIView):
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         if not is_anonymous(self.request.user):
             user_hobby = self.request.user.hobby
             origin_lat = float(self.request.GET.get('lat', self.request.user.lat))
