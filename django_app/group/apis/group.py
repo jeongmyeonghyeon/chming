@@ -26,7 +26,7 @@ __all__ = (
 
 class MainGroupListView(APIView):
     def get(self, request, *args, **kwargs):
-        print(is_anonymous(self.request.user))
+        # print(is_anonymous(self.request.user))
         if not is_anonymous(self.request.user):
             user_hobby = self.request.user.hobby
             origin_lat = float(self.request.GET.get('lat', self.request.user.lat))
@@ -38,7 +38,7 @@ class MainGroupListView(APIView):
                 distance = group.get_distance(origin_lat, origin_lng)
                 if distance < distance_limit:
                     filter_group_pk_list.append(group.pk)
-            print(len(filter_group_pk_list))
+            # print(len(filter_group_pk_list))
             if not len(filter_group_pk_list):
                 raise APIException({'result': '검색결과가 없습니다.'})
             queryset = Group.objects.filter(Q(pk__in=filter_group_pk_list))
@@ -51,7 +51,7 @@ class MainGroupListView(APIView):
         origin_lat = float(self.request.GET.get('lat', 37.517547))
         origin_lng = float(self.request.GET.get('lng', 127.018127))
         distance_limit = float(self.request.GET.get('distance_limit', 0.5))
-        print('@@@@@ 현재좌표값, 검색반경: ', origin_lat, origin_lng, distance_limit)
+        # print('@@@@@ 현재좌표값, 검색반경: ', origin_lat, origin_lng, distance_limit)
         # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#iterator
         # 쿼리를 수행하여 QuerySet을 평가하고 결과에 대한 반복자를 반환합니다. ...
         groups = Group.objects.iterator()
@@ -64,8 +64,8 @@ class MainGroupListView(APIView):
             # 주어진 반경보다 작을 경우 필터링 리스트에 pk 값 추가
             if distance < distance_limit:
                 filter_group_pk_list.append(group.pk)
-        print('@@@@@ 전체 그룹 수: ', Group.objects.count())
-        print('@@@@@ 필터링 된 그룹들의 pk 리스트: ', filter_group_pk_list)
+        # print('@@@@@ 전체 그룹 수: ', Group.objects.count())
+        # print('@@@@@ 필터링 된 그룹들의 pk 리스트: ', filter_group_pk_list)
         # 검색된 모임이 없는 경우 예외처리
         # if not len(filter_group_pk_list):
         #     raise APIException({'result': '검색결과가 없습니다.'})
