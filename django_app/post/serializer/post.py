@@ -44,7 +44,6 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'created_date',
             'modified_date',
             'comment_set',
-            # 'like_count',
             # 'hit_count',
         )
         read_only_fields = (
@@ -69,7 +68,6 @@ class PostSerializer(serializers.ModelSerializer):
             'author',
             'created_date',
             'modified_date',
-            # 'like_count',
             # 'hit_count',
 
         )
@@ -86,8 +84,10 @@ class PostSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         # 새로 설정할 내용을 작성하고
         comment_count = instance.comment_set.count()
+        postlike_count = instance.postlike_set.count()
         # [] 에 필드명을 지정해준다.
         ret['comments_count'] = comment_count
+        ret['post_like_count'] = postlike_count
 
         return ret
 

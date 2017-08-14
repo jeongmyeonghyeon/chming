@@ -1,4 +1,8 @@
+from django.db.models import Q
 from rest_framework import generics, permissions
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from group.models import Group
 from utils.permissions import AuthorIsRequestUser
@@ -14,6 +18,7 @@ __all__ = (
     'PostRetrieveView',
     'PostUpdateView',
     'PostDestroyView',
+    'PostLikeToggleView',
 )
 
 
@@ -44,8 +49,11 @@ class PostNoticeListView(generics.ListAPIView):
     def get_queryset(self):
         group_pk = self.kwargs['group_pk']
         group = Group.objects.get(pk=group_pk)
-        return Post.objects.filter(group=group).exclude(post_type='False')
+        return Post.objects.filter(group=group).exclude(
+            post_type='False').order_by('-modified_date')[:2]
 
+    # 수정한 날짜 역순 정렬 (현재 model은 생성한 날짜 역순 정렬... null 값이 상위로 오는상황)
+    # 최근 2개만 검색하게 (공지가 2개라서 그이상 필요 x)
 
 class PostCreateView(generics.CreateAPIView):
     serializer_class = PostSerializer
@@ -102,3 +110,15 @@ class PostDestroyView(generics.DestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly,
         AuthorIsRequestUser,
     )
+
+
+class PostLikeToggleView(APIView):
+    def post(self, request, group_pk, pk):
+
+        instance = get_object_or_404(Post, pk=pk)
+        post_like, post_like_created = instance.postlike_set.get_or_create(
+            user=request.user
+        )
+        if not post_like_created:
+            post_like.delete()
+        return Response({'created': post_like_created})

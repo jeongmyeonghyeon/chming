@@ -18,13 +18,14 @@ from django.conf.urls import url
 from .. import apis
 
 urlpatterns = [
-    url(r'^', apis.PostListView.as_view()),
+    url(r'^$', apis.PostListView.as_view()),
     url(r'^img/$', apis.PostImageListView.as_view()),
     url(r'^notice/$', apis.PostNoticeListView.as_view()),
     url(r'^create/$', apis.PostCreateView.as_view()),
     url(r'^(?P<pk>\d+)/$', apis.PostRetrieveView.as_view()),
     url(r'^(?P<pk>\d+)/update/$', apis.PostUpdateView.as_view()),
     url(r'^(?P<pk>\d+)/delete/$', apis.PostDestroyView.as_view()),
+    url(r'^(?P<pk>\d+)/like_toggle/$', apis.PostLikeToggleView.as_view()),
 
     url(r'^(?P<pk>\d+)/comment/$', apis.CommentListView.as_view()),
     url(r'^(?P<pk>\d+)/comment/create/$', apis.CommentCreateView.as_view()),
