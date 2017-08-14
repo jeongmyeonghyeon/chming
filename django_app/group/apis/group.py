@@ -37,9 +37,10 @@ class MainGroupListView(APIView):
                 distance = group.get_distance(origin_lat, origin_lng)
                 if distance < distance_limit:
                     filter_group_pk_list.append(group.pk)
+            print(len(filter_group_pk_list))
             if not len(filter_group_pk_list):
                 raise APIException({'result': '검색결과가 없습니다.'})
-            queryset = Group.objects.filter(Q(pk__in=filter_group_pk_list), Q(hobby=user_hobby))
+            queryset = Group.objects.filter(Q(pk__in=filter_group_pk_list))
             serializer = MainGroupListSerializer(queryset, many=True)
             return Response(serializer.data)
         # 비로그인 유저(anonymous user)의 필터링
