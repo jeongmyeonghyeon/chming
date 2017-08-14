@@ -69,6 +69,7 @@ class MainGroupListSerializer(serializers.ModelSerializer):
         model = Group
         fields = (
             'pk',
+            'hobby',
             'lat',
             'lng',
         )

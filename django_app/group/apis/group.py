@@ -26,99 +26,55 @@ __all__ = (
 
 class MainGroupListView(APIView):
     def get(self, request, *args, **kwargs):
-        # print(is_anonymous(self.request.user))
         if not is_anonymous(self.request.user):
-            user_hobby = self.request.user.hobby
             origin_lat = float(self.request.GET.get('lat', self.request.user.lat))
             origin_lng = float(self.request.GET.get('lng', self.request.user.lng))
             distance_limit = float(self.request.GET.get('distance_limit', 0.5))
+            hobby = self.request.GET.get('hobby', self.request.user.hobby.split(','))
+
             groups = Group.objects.iterator()
             filter_group_pk_list = []
             for group in groups:
                 distance = group.get_distance(origin_lat, origin_lng)
                 if distance < distance_limit:
                     filter_group_pk_list.append(group.pk)
-            # print(len(filter_group_pk_list))
             if not len(filter_group_pk_list):
                 raise APIException({'result': '검색결과가 없습니다.'})
-            queryset = Group.objects.filter(Q(pk__in=filter_group_pk_list))
+
+            if not len(hobby):
+                queryset = Group.objects.filter(pk__in=filter_group_pk_list)
+            elif len(hobby) == 1:
+                queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__contains=hobby)
+            else:
+                queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__in=hobby)
+
             serializer = MainGroupListSerializer(queryset, many=True)
+
             return Response(serializer.data)
-        # 비로그인 유저(anonymous user)의 필터링
-        # query string 으로 위도, 경도, 반경을 받는다.
-        # request.GET 의 키값을 사용
-        # query string 이 없는 경우 설정해 놓은 좌표값(패스트캠퍼스 위치)을 기준 좌표값으로 사용한다.
         origin_lat = float(self.request.GET.get('lat', 37.517547))
         origin_lng = float(self.request.GET.get('lng', 127.018127))
         distance_limit = float(self.request.GET.get('distance_limit', 0.5))
-        # print('@@@@@ 현재좌표값, 검색반경: ', origin_lat, origin_lng, distance_limit)
-        # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#iterator
-        # 쿼리를 수행하여 QuerySet을 평가하고 결과에 대한 반복자를 반환합니다. ...
+        hobby = self.request.GET.get('hobby', [])
+
         groups = Group.objects.iterator()
-        # 필터링 된 그룹의 pk 를 보관할 리스트 선언
         filter_group_pk_list = []
-        # groups 순회
         for group in groups:
-            # group 인스턴스의 get_distance(거리계산하는 함수)를 통해 거리받음
             distance = group.get_distance(origin_lat, origin_lng)
-            # 주어진 반경보다 작을 경우 필터링 리스트에 pk 값 추가
             if distance < distance_limit:
                 filter_group_pk_list.append(group.pk)
-        # print('@@@@@ 전체 그룹 수: ', Group.objects.count())
-        # print('@@@@@ 필터링 된 그룹들의 pk 리스트: ', filter_group_pk_list)
-        # 검색된 모임이 없는 경우 예외처리
-        # if not len(filter_group_pk_list):
-        #     raise APIException({'result': '검색결과가 없습니다.'})
-        # __in 을 통해 serializer 에 사용할 queryset 반환
-        queryset = Group.objects.filter(pk__in=filter_group_pk_list)
-        serializer = MainGroupListSerializer(queryset, many=True)
         if not len(filter_group_pk_list):
             raise APIException({'result': '검색결과가 없습니다.'})
-        return Response(serializer.data)
 
-
-class MainGroupListView1(generics.ListAPIView):
-    serializer_class = MainGroupListSerializer
-
-    def get_queryset(self):
-        # 로그인한 유저의 모임 필터링
-        if not is_anonymous(self.request.user):
-            user_hobby = self.request.user.hobby
-            origin_lat = float(self.request.GET.get('lat', self.request.user.lat))
-            origin_lng = float(self.request.GET.get('lng', self.request.user.lng))
-            distance_limit = float(self.request.GET.get('distance_limit', 0.5))
-            groups = Group.objects.iterator()
-            filter_group_pk_list = []
-            for group in groups:
-                distance = group.get_distance(origin_lat, origin_lng)
-                if distance < distance_limit:
-                    filter_group_pk_list.append(group.pk)
-            return Group.objects.filter(Q(pk__in=filter_group_pk_list), Q(hobby=user_hobby))
-        # 비로그인 유저(anonymous user)의 필터링
+        if not len(hobby):
+            queryset = Group.objects.filter(pk__in=filter_group_pk_list)
+        elif len(hobby) == 1:
+            queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__contains=hobby)
         else:
-            # query string 으로 위도, 경도, 반경을 받는다.
-            # request.GET 의 키값을 사용
-            # query string 이 없는 경우 설정해 놓은 좌표값(패스트캠퍼스 위치)을 기준 좌표값으로 사용한다.
-            origin_lat = float(self.request.GET.get('lat', 37.517547))
-            origin_lng = float(self.request.GET.get('lng', 127.018127))
-            distance_limit = float(self.request.GET.get('distance_limit', 0.5))
-            print('@@@@@ 현재좌표값, 검색반경: ', origin_lat, origin_lng, distance_limit)
-            # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#iterator
-            # 쿼리를 수행하여 QuerySet을 평가하고 결과에 대한 반복자를 반환합니다. ...
-            groups = Group.objects.iterator()
-            # 필터링 된 그룹의 pk 를 보관할 리스트 선언
-            filter_group_pk_list = []
-            # groups 순회
-            for group in groups:
-                # group 인스턴스의 get_distance(거리계산하는 함수)를 통해 거리받음
-                distance = group.get_distance(origin_lat, origin_lng)
-                # 주어진 반경보다 작을 경우 필터링 리스트에 pk 값 추가
-                if distance < distance_limit:
-                    filter_group_pk_list.append(group.pk)
-            print('@@@@@ 전체 그룹 수: ', Group.objects.count())
-            print('@@@@@ 필터링 된 그룹들의 pk 리스트: ', filter_group_pk_list)
-            # __in 을 통해 serializer 에 사용할 queryset 반환
-            return Group.objects.filter(pk__in=filter_group_pk_list)
+            queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__in=hobby)
+
+        serializer = MainGroupListSerializer(queryset, many=True)
+
+        return Response(serializer.data)
 
 
 class AllGroupListView(generics.ListAPIView):

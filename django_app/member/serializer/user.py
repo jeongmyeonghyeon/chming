@@ -50,15 +50,28 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserSignupUpdateSerializer(serializers.ModelSerializer):
-    def __init__(self, *args, **kwargs):
-        super(UserSignupUpdateSerializer, self).__init__(*args, **kwargs)
-        self.fields['email'].error_messages['blank'] = '이 항목을 채워주세요.'
-        # self.fields['email'].error_messages['invalid'] = '유효한 이메일 주소가 아닙니다.'
-        self.fields['username'].error_messages['blank'] = '이 항목을 채워주세요.'
-
     confirm_password = serializers.CharField(allow_blank=False, write_only=True)
     lat = serializers.FloatField()
     lng = serializers.FloatField()
+
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'email',
+            'username',
+            'password',
+            'confirm_password',
+            'profile_img',
+            'gender',
+            'birth_year',
+            'birth_month',
+            'birth_day',
+            'hobby',
+            'address',
+            'lat',
+            'lng',
+        )
 
     def validate(self, data):
         """
@@ -105,22 +118,3 @@ class UserSignupUpdateSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
-    class Meta:
-        model = User
-        fields = (
-            'pk',
-            'email',
-            'username',
-            'password',
-            'confirm_password',
-            'profile_img',
-            'gender',
-            'birth_year',
-            'birth_month',
-            'birth_day',
-            'hobby',
-            'address',
-            'lat',
-            'lng',
-        )
