@@ -20,12 +20,12 @@ __all__ = (
     'GroupUpdateView',
     'GroupDestroyView',
     'GroupLikeToggleView',
+    'GroupJoinView',
 )
 
 
 class MainGroupListView(generics.ListAPIView):
     serializer_class = MainGroupListSerializer
-    pagination_class = GroupPagination
 
     def get_queryset(self):
         # 로그인한 유저의 모임 필터링
@@ -148,3 +148,16 @@ class GroupLikeToggleView(APIView):
         if not group_like_created:
             group_like.delete()
         return Response({'created': group_like_created})
+
+
+class GroupJoinView(APIView):
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )
+
+    def post(self, request, group_pk):
+        instance = get_object_or_404(Group, pk=group_pk)
+        if instance.members.filter(pk=request.user.pk):
+            raise APIException({'joined': '이미 가입한 모임입니다.'})
+        instance.members.add(request.user)
+        return Response({'joined': True})
