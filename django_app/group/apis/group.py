@@ -67,12 +67,12 @@ class MainGroupListView(APIView):
         print('@@@@@ 전체 그룹 수: ', Group.objects.count())
         print('@@@@@ 필터링 된 그룹들의 pk 리스트: ', filter_group_pk_list)
         # 검색된 모임이 없는 경우 예외처리
-        if not len(filter_group_pk_list):
-            raise APIException({'result': '검색결과가 없습니다.'})
+        # if not len(filter_group_pk_list):
+        #     raise APIException({'result': '검색결과가 없습니다.'})
         # __in 을 통해 serializer 에 사용할 queryset 반환
         queryset = Group.objects.filter(pk__in=filter_group_pk_list)
         serializer = MainGroupListSerializer(queryset, many=True)
-        if len(filter_group_pk_list):
+        if not len(filter_group_pk_list):
             raise APIException({'result': '검색결과가 없습니다.'})
         return Response(serializer.data)
 
