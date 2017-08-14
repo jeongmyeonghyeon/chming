@@ -23,7 +23,7 @@ STATICFILES_STORAGE = 'config.storages.StaticStorage'
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-# 배포모드니까 DEBUG는 True
+# 배포모드니까 DEBUG는 False
 DEBUG = True
 ALLOWED_HOSTS = config_secret_deploy['django']['allowed_hosts']
 
