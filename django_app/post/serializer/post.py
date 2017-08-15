@@ -23,6 +23,7 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = (
             'pk',
+            'author',
             'content',
             'created_date',
         )
