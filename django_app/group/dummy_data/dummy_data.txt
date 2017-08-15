@@ -10,3 +10,13 @@ Region.objects.create(si='서울시', gu='서초구', dong='방배동', lat=37.4
 Region.objects.create(si='서울시', gu='관악구', dong='신림동', lat=37.484223, lng=127.929597)
 Region.objects.create(si='서울시', gu='마포구', dong='동교동', lat=37.556553, lng=127.923418)
 Region.objects.create(si='서울시', gu='강남구', dong='신사동', lat=37.515649, lng=127.019462)
+
+HobbyGroup.objects.create(category='운동/스포츠', category_detail='축구')
+HobbyGroup.objects.create(category='운동/스포츠', category_detail='야구')
+HobbyGroup.objects.create(category='운동/스포츠', category_detail='농구')
+HobbyGroup.objects.create(category='음악/악기', category_detail='재즈')
+HobbyGroup.objects.create(category='음악/악기', category_detail='피아노')
+HobbyGroup.objects.create(category='음악/악기', category_detail='클래식')
+HobbyGroup.objects.create(category='반려동물', category_detail='강아지')
+HobbyGroup.objects.create(category='반려동물', category_detail='고양이')
+

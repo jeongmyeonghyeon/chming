@@ -29,7 +29,7 @@ class Group(models.Model):
     hobby = models.CharField(max_length=100)
     author = models.ForeignKey(
         base.AUTH_USER_MODEL,
-        related_name='open_group'
+        related_name='open_groups'
     )
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -47,7 +47,10 @@ class Group(models.Model):
     lng = models.DecimalField(max_digits=9, decimal_places=6, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-    members = models.ManyToManyField('member.User')
+    members = models.ManyToManyField(
+        base.AUTH_USER_MODEL,
+        related_name='joined_groups',
+    )
 
     def __str__(self):
         return self.name
