@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import raise_errors_on_nested_writes
 
-from group.models import Group
+from group.models import Group, Hobby
 from utils.fields import CustomListField
 from ..models import User
 
@@ -29,6 +29,7 @@ class GroupSerializer(serializers.ModelSerializer):
             'lng',
         )
 
+# pk, category, category_detail, name, image
 
 class UserPKSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,7 +51,9 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     hobby = CustomListField()
-    open_group = GroupSerializer(read_only=True, many=True)
+    open_groups = GroupSerializer(read_only=True, many=True)
+    joined_groups = GroupSerializer(read_only=True, many=True)
+    like_groups = GroupSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
@@ -67,7 +70,9 @@ class UserSerializer(serializers.ModelSerializer):
             'address',
             'lat',
             'lng',
-            'open_group',
+            'open_groups',
+            'joined_groups',
+            'like_groups',
         )
 
 
