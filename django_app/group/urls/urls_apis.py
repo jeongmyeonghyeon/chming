@@ -33,8 +33,10 @@ urlpatterns = [
     url(r'^(?P<group_pk>\d+)/post/', include('post.urls.urls_apis')),
 
     # Region API
-    url(r'^region/$', region.RegionListView.as_view()),
+    url(r'^region/$', region.RegionListCreateView.as_view()),
+    url(r'^region/(?P<pk>\d+)/$', region.RegionUpdateDestroyView.as_view()),
 
     # Hobby API
-    url(r'^hobby/$', hobby.HobbyListView.as_view())
+    url(r'^hobby/$', hobby.HobbyListCreateView.as_view()),
+    url(r'^hobby/(?P<pk>\d+)/$', hobby.HobbyUpdateDestroyView.as_view())
 ]

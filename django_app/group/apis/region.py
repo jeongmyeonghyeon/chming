@@ -4,10 +4,15 @@ from group.serializer.region import RegionSerializer
 from ..models import Region
 
 __all__ = (
-    'RegionListView',
+    'RegionListCreateView',
 )
 
 
-class RegionListView(generics.ListAPIView):
+class RegionListCreateView(generics.ListCreateAPIView):
+    queryset = Region.objects.all()
+    serializer_class = RegionSerializer
+
+
+class RegionUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Region.objects.all()
     serializer_class = RegionSerializer

@@ -4,7 +4,7 @@ from group.serializer.hobby import HobbySerializer
 from ..models import Hobby
 
 
-class HobbyListView(generics.ListCreateAPIView):
+class HobbyListCreateView(generics.ListCreateAPIView):
     queryset = Hobby.objects.all()
     serializer_class = HobbySerializer
 
