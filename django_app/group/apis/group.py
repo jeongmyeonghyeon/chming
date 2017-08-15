@@ -116,7 +116,7 @@ class GroupUpdateView(APIView):
     )
 
     def put(self, request, group_pk, **kwargs):
-        partial = kwargs.pop('partial', False)
+        partial = kwargs.pop('partial', True)
         instance = Group.objects.get(pk=group_pk)
         serializer = GroupSerializer(instance, data=request.data, partial=partial)
         if request.user == instance.author:
