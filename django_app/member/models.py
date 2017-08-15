@@ -85,6 +85,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_all_like_groups(self):
         return self.groupLike_set.all()
 
+    def get_all_joined_groups(self):
+        return self.group_set.all()
+
     def __str__(self):  # __unicode__ on Python 2
         return self.email
 

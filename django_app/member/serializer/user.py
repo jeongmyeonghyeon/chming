@@ -1,13 +1,33 @@
 from rest_framework import serializers
 from rest_framework.serializers import raise_errors_on_nested_writes
 
+from group.models import Group
 from utils.fields import CustomListField
 from ..models import User
 
 __all__ = (
     'UserSerializer',
-    'UserSignupUpdateSerializer',
+    'UserSignupSerializer',
+    'UserUpdateSerializer',
 )
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    lat = serializers.FloatField()
+    lng = serializers.FloatField()
+
+    class Meta:
+        model = Group
+        fields = (
+            'pk',
+            'hobby',
+            'image',
+            'name',
+            'description',
+            'address',
+            'lat',
+            'lng',
+        )
 
 
 class UserPKSerializer(serializers.ModelSerializer):
@@ -30,6 +50,7 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     hobby = CustomListField()
+    open_group = GroupSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
@@ -46,10 +67,55 @@ class UserSerializer(serializers.ModelSerializer):
             'address',
             'lat',
             'lng',
+            'open_group',
         )
 
 
-class UserSignupUpdateSerializer(serializers.ModelSerializer):
+class UserUpdateSerializer(serializers.ModelSerializer):
+    lat = serializers.FloatField()
+    lng = serializers.FloatField()
+
+    class Meta:
+        model = User
+        fields = fields = (
+            'pk',
+            'email',
+            'username',
+            'password',
+            'profile_img',
+            'gender',
+            'birth_year',
+            'birth_month',
+            'birth_day',
+            'hobby',
+            'address',
+            'lat',
+            'lng',
+        )
+
+    def update(self, instance, validated_data):
+        raise_errors_on_nested_writes('update', self, validated_data)
+        # info = model_meta.get_field_info(instance)
+
+        password = validated_data.pop('password', None)
+        for attr, value in validated_data.items():
+            # # 다대다 관계에 대한 어떤 처리를 다룬 것 같다.
+            # # 그게 구체적으로 어떤 처리인지 모르겠다. (아마 다대다 관계의 인스턴스의 필드를 불러와 그 부분까지 수정해주는 정도로 이해된다.
+            # # 주석처리해도 작동한다.
+            # # 관계에 대한 검사를 하지 않으므로, instnace의 정보를 가져오는 info 인스턴스 역시 사용할 필요가 없어졌다.
+            # if attr in info.relations and info.relations[attr].to_many:
+            #     set_many(instance, attr, value)
+            # else:
+
+            # setattr(x, 'y', v) is equivalent to ``x.y = v''
+            setattr(instance, attr, value)
+        instance.set_password(password)
+        instance.save()
+
+        return instance
+
+
+class UserSignupSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(allow_blank=False, write_only=True)
     lat = serializers.FloatField()
     lng = serializers.FloatField()
@@ -97,24 +163,3 @@ class UserSignupUpdateSerializer(serializers.ModelSerializer):
         # return user 를 주석처리해도 데이터베이스에는 유저가 추가됨...
         user.save()
         return user
-
-    def update(self, instance, validated_data):
-        raise_errors_on_nested_writes('update', self, validated_data)
-        # info = model_meta.get_field_info(instance)
-
-        password = validated_data.pop('password', None)
-        for attr, value in validated_data.items():
-            # # 다대다 관계에 대한 어떤 처리를 다룬 것 같다.
-            # # 그게 구체적으로 어떤 처리인지 모르겠다. (아마 다대다 관계의 인스턴스의 필드를 불러와 그 부분까지 수정해주는 정도로 이해된다.
-            # # 주석처리해도 작동한다.
-            # # 관계에 대한 검사를 하지 않으므로, instnace의 정보를 가져오는 info 인스턴스 역시 사용할 필요가 없어졌다.
-            # if attr in info.relations and info.relations[attr].to_many:
-            #     set_many(instance, attr, value)
-            # else:
-
-            # setattr(x, 'y', v) is equivalent to ``x.y = v''
-            setattr(instance, attr, value)
-        instance.set_password(password)
-        instance.save()
-
-        return instance
