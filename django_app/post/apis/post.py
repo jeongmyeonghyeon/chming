@@ -1,38 +1,59 @@
+from django.db.models import Q
 from rest_framework import generics, permissions
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from group.models import Group
 from utils.permissions import AuthorIsRequestUser
 from ..models import Post, Comment
 
-from ..serializer import PostSerializer, PostDetailSerializer
+from ..serializer import PostSerializer, PostDetailSerializer, PostPagination
 
 __all__ = (
     'PostListView',
     'PostImageListView',
+    'PostNoticeListView',
     'PostCreateView',
-    'PostRetrieveAPIView',
-    'PostUpdateAPIView',
-    'PostDestroyAPIView',
+    'PostRetrieveView',
+    'PostUpdateView',
+    'PostDestroyView',
+    'PostLikeToggleView',
 )
 
 
 class PostListView(generics.ListAPIView):
     serializer_class = PostSerializer
+    pagination_class = PostPagination
 
     def get_queryset(self):
         group_pk = self.kwargs['group_pk']
         group = Group.objects.get(pk=group_pk)
-        return Post.objects.filter(group=group)
+        queryset = Post.objects.filter(group=group)
+        return queryset
 
 
 class PostImageListView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    pagination_class = PostPagination
+
+    def get_queryset(self):
+        group_pk = self.kwargs['group_pk']
+        group = Group.objects.get(pk=group_pk)
+        return Post.objects.filter(group=group).exclude(post_img='')
+
+
+class PostNoticeListView(generics.ListAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
         group_pk = self.kwargs['group_pk']
         group = Group.objects.get(pk=group_pk)
-        return Post.objects.filter(group=group).exclude(img='')
+        return Post.objects.filter(group=group).exclude(
+            post_type='False').order_by('-modified_date')[:2]
 
+    # 수정한 날짜 역순 정렬 (현재 model은 생성한 날짜 역순 정렬... null 값이 상위로 오는상황)
+    # 최근 2개만 검색하게 (공지가 2개라서 그이상 필요 x)
 
 class PostCreateView(generics.CreateAPIView):
     serializer_class = PostSerializer
@@ -56,7 +77,7 @@ class PostCreateView(generics.CreateAPIView):
         return Post.objects.filter(group=group)
 
 
-class PostRetrieveAPIView(generics.RetrieveAPIView):
+class PostRetrieveView(generics.RetrieveAPIView):
     serializer_class = PostDetailSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -69,7 +90,7 @@ class PostRetrieveAPIView(generics.RetrieveAPIView):
         return Post.objects.filter(group=group)
 
 
-class PostUpdateAPIView(generics.UpdateAPIView):
+class PostUpdateView(generics.UpdateAPIView):
     serializer_class = PostSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -82,10 +103,22 @@ class PostUpdateAPIView(generics.UpdateAPIView):
         return Post.objects.filter(group=group)
 
 
-class PostDestroyAPIView(generics.DestroyAPIView):
+class PostDestroyView(generics.DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         AuthorIsRequestUser,
     )
+
+
+class PostLikeToggleView(APIView):
+    def post(self, request, group_pk, pk):
+
+        instance = get_object_or_404(Post, pk=pk)
+        post_like, post_like_created = instance.postlike_set.get_or_create(
+            user=request.user
+        )
+        if not post_like_created:
+            post_like.delete()
+        return Response({'created': post_like_created})
