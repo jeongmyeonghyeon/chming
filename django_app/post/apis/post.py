@@ -1,11 +1,12 @@
 from django.db.models import Q
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.exceptions import APIException
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from group.models import Group
-from utils.permissions import AuthorIsRequestUser
+from utils.permissions import AuthorIsRequestUser, RequestUserIsGroupMeber
 from ..models import Post, Comment
 
 from ..serializer import PostSerializer, PostDetailSerializer, PostPagination
@@ -57,25 +58,18 @@ class PostNoticeListView(generics.ListAPIView):
 
 
 class PostCreateView(generics.CreateAPIView):
-    serializer_class = PostSerializer
+    def post(self, request, *args, **kwargs):
+        # post 의 author 가 group 의 member 인지 검사
+        group = Group.objects.filter(pk=self.kwargs['group_pk'])
+        if not group.filter(members__in=[self.request.user]).exists():
+            raise APIException({"error": "모임의 회원이 아닙니다."})
 
-    def perform_create(self, serializer):
-        group_pk = self.kwargs['group_pk']
-        group = Group.objects.get(pk=group_pk)
-        instance = serializer.save(author=self.request.user, group=group)
-        comment_content = self.request.data.get('comment')
-        if comment_content:
-            instance.comment_set = Comment.objects.create(
-                post=instance,
-                author=instance.author,
-                content=comment_content,
-            )
-        instance.save()
-
-    def get_queryset(self):
-        group_pk = self.kwargs['group_pk']
-        group = Group.objects.get(pk=group_pk)
-        return Post.objects.filter(group=group)
+        serializer = PostSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        group = Group.objects.get(pk=self.kwargs['group_pk'])
+        serializer.save(author=self.request.user, group=group)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class PostRetrieveView(generics.RetrieveAPIView):
