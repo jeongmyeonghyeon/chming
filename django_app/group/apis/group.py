@@ -30,7 +30,7 @@ class MainGroupListView(APIView):
             origin_lat = float(self.request.GET.get('lat', self.request.user.lat))
             origin_lng = float(self.request.GET.get('lng', self.request.user.lng))
             distance_limit = float(self.request.GET.get('distance_limit', 0.5))
-            hobby = self.request.GET.get('hobby', self.request.user.hobby.split(','))
+            hobby = self.request.GET.get('hobby', self.request.user.hobby).split(',')
 
             groups = Group.objects.iterator()
             filter_group_pk_list = []
@@ -41,12 +41,13 @@ class MainGroupListView(APIView):
             if not len(filter_group_pk_list):
                 raise APIException({'result': '검색결과가 없습니다.'})
 
-            if not len(hobby):
-                queryset = Group.objects.filter(pk__in=filter_group_pk_list)
-            elif len(hobby) == 1:
-                queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__contains=hobby)
+            if len(hobby) == 1:
+                queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__in=hobby)
             else:
                 queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__in=hobby)
+
+            if not queryset:
+                raise APIException({'result': '검색결과가 없습니다.'})
 
             serializer = MainGroupListSerializer(queryset, many=True)
 
@@ -54,7 +55,10 @@ class MainGroupListView(APIView):
         origin_lat = float(self.request.GET.get('lat', 37.517547))
         origin_lng = float(self.request.GET.get('lng', 127.018127))
         distance_limit = float(self.request.GET.get('distance_limit', 0.5))
-        hobby = self.request.GET.get('hobby', [])
+        if self.request.GET.get('hobby') is None:
+            hobby = None
+        else:
+            hobby = self.request.GET.get('hobby').split(',')
 
         groups = Group.objects.iterator()
         filter_group_pk_list = []
@@ -65,10 +69,10 @@ class MainGroupListView(APIView):
         if not len(filter_group_pk_list):
             raise APIException({'result': '검색결과가 없습니다.'})
 
-        if not len(hobby):
+        if not hobby:
             queryset = Group.objects.filter(pk__in=filter_group_pk_list)
         elif len(hobby) == 1:
-            queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__contains=hobby)
+            queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__in=hobby)
         else:
             queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__in=hobby)
 
