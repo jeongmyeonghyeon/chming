@@ -27,12 +27,15 @@ class Post(models.Model):
         related_name='posts'
     )
     author = models.ForeignKey(base.AUTH_USER_MODEL)
-    img = models.ImageField(
+    post_img = models.ImageField(
         upload_to='post/%Y/%m/%d',
         blank=True,
     )
     created_date = models.DateTimeField(auto_now_add=True)
-    modified_d_date = models.DateTimeField(auto_now=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_date']
 
 
 class PostLike(models.Model):

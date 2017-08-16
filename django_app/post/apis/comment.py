@@ -7,7 +7,7 @@ from ..models import Comment, Post
 __all__ = (
     'CommentListView',
     'CommentCreateView',
-    'CommentDeleteView',
+    'CommentDestroyView',
 )
 
 
@@ -32,7 +32,7 @@ class CommentCreateView(generics.ListCreateAPIView):
         return Post.objects.filter(post=post)
 
 
-class CommentDeleteView(generics.DestroyAPIView):
+class CommentDestroyView(generics.DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (

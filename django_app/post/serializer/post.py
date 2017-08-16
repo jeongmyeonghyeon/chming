@@ -23,6 +23,7 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = (
             'pk',
+            'author',
             'content',
             'created_date',
         )
@@ -39,15 +40,18 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'post_type',
             'title',
             'content',
-            'img',
+            'post_img',
             'author',
-            'comment_set',
             'created_date',
-            # 'like_count',
+            'modified_date',
+            'comment_set',
             # 'hit_count',
         )
         read_only_fields = (
             'author',
+            'created_date',
+            'modified_date',
+            'comment_set',
         )
 
 
@@ -61,15 +65,18 @@ class PostSerializer(serializers.ModelSerializer):
             'post_type',
             'title',
             'content',
-            'img',
+            'post_img',
             'author',
             'created_date',
-            # 'like_count',
+            'modified_date',
             # 'hit_count',
 
         )
         read_only_fields = (
             'author',
+            'created_date',
+            'modified_date',
+            'comment_set',
         )
 
     # 모델에 없는 필드 추가해서 보내기
@@ -78,8 +85,10 @@ class PostSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         # 새로 설정할 내용을 작성하고
         comment_count = instance.comment_set.count()
+        postlike_count = instance.postlike_set.count()
         # [] 에 필드명을 지정해준다.
         ret['comments_count'] = comment_count
+        ret['post_like_count'] = postlike_count
 
         return ret
 
