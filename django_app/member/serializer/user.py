@@ -29,6 +29,18 @@ class GroupSerializer(serializers.ModelSerializer):
             'lng',
         )
 
+    def to_representation(self, instance):
+        # 기존 instance 를 받아서
+        ret = super().to_representation(instance)
+        # 새로 설정할 내용을 작성하고
+        like_users_count = instance.get_all_like_users_count()
+        member_count = instance.get_all_member_count()
+        # [] 에 필드명을 지정해준다.
+        ret['member_count'] = member_count
+        ret['like_users_count'] = like_users_count
+        return ret
+
+
 # pk, category, category_detail, name, image
 
 class UserPKSerializer(serializers.ModelSerializer):
