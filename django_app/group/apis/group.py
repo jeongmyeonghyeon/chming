@@ -32,6 +32,9 @@ class MainGroupListView(APIView):
             distance_limit = float(self.request.GET.get('distance_limit', 0.5))
             hobby = self.request.GET.get('hobby', self.request.user.hobby).split(',')
 
+            for i in range(len(hobby)):
+                hobby[i] = hobby[i].strip()
+
             groups = Group.objects.iterator()
             filter_group_pk_list = []
             for group in groups:
