@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from group.models import Group
-from utils.permissions import AuthorIsRequestUser, RequestUserIsGroupMeber
+from utils.permissions import AuthorIsRequestUser
 from ..models import Post, Comment
 
 from ..serializer import PostSerializer, PostDetailSerializer, PostPagination
@@ -58,6 +58,10 @@ class PostNoticeListView(generics.ListAPIView):
 
 
 class PostCreateView(generics.CreateAPIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
+
     def post(self, request, *args, **kwargs):
         # post 의 author 가 group 의 member 인지 검사
         group = Group.objects.filter(pk=self.kwargs['group_pk'])
