@@ -31,6 +31,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
     lng = serializers.FloatField()
     members = SimpleUserSerializer(many=True)
     like_users = SimpleUserSerializer(many=True)
+    # posts =
 
     class Meta:
         model = Group
@@ -48,7 +49,6 @@ class GroupDetailSerializer(serializers.ModelSerializer):
             'modified_date',
             'members',
             'like_users',
-
         )
 
     # 모델에 없는 필드 추가해서 보내기
