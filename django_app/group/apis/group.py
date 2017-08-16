@@ -3,11 +3,12 @@ from django.db.models import Q
 from rest_framework import generics, permissions, status
 from rest_framework.compat import is_anonymous
 from rest_framework.exceptions import APIException
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from group.serializer.group import GroupSerializer, MainGroupListSerializer, GroupDetailSerializer
+from .group_function import filtered_group_list as get_filtered_group_list
 from group.pagination import GroupPagination
 from utils.permissions import AuthorIsRequestUser
 from ..models import Group
@@ -24,62 +25,20 @@ __all__ = (
 )
 
 
-class MainGroupListView(APIView):
+class MainGroupListView(GenericAPIView):
+    serializer_class = MainGroupListSerializer
+
     def get(self, request, *args, **kwargs):
-        if not is_anonymous(self.request.user):
-            origin_lat = float(self.request.GET.get('lat', self.request.user.lat))
-            origin_lng = float(self.request.GET.get('lng', self.request.user.lng))
-            distance_limit = float(self.request.GET.get('distance_limit', 0.5))
-            hobby = self.request.GET.get('hobby', self.request.user.hobby).split(',')
+        serializer = get_filtered_group_list(self)
+        return Response(serializer.data)
 
-            for i in range(len(hobby)):
-                hobby[i] = hobby[i].strip()
 
-            groups = Group.objects.iterator()
-            filter_group_pk_list = []
-            for group in groups:
-                distance = group.get_distance(origin_lat, origin_lng)
-                if distance < distance_limit:
-                    filter_group_pk_list.append(group.pk)
-            if not len(filter_group_pk_list):
-                raise APIException({'result': '검색결과가 없습니다.'})
+class MainGroupDetailListView(GenericAPIView):
+    serializer_class = GroupDetailSerializer
+    pagination_class = GroupPagination
 
-            queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__in=hobby)
-
-            if not queryset:
-                raise APIException({'result': '검색결과가 없습니다.'})
-
-            serializer = MainGroupListSerializer(queryset, many=True)
-
-            return Response(serializer.data)
-
-        origin_lat = float(self.request.GET.get('lat', 37.517547))
-        origin_lng = float(self.request.GET.get('lng', 127.018127))
-        distance_limit = float(self.request.GET.get('distance_limit', 0.5))
-
-        if self.request.GET.get('hobby') is None:
-            hobby = None
-        else:
-            hobby = self.request.GET.get('hobby').split(',')
-            for i in range(len(hobby)):
-                hobby[i] = hobby[i].strip()
-
-        groups = Group.objects.iterator()
-        filter_group_pk_list = []
-        for group in groups:
-            distance = group.get_distance(origin_lat, origin_lng)
-            if distance < distance_limit:
-                filter_group_pk_list.append(group.pk)
-        if not len(filter_group_pk_list):
-            raise APIException({'result': '검색결과가 없습니다.'})
-
-        if not hobby:
-            queryset = Group.objects.filter(pk__in=filter_group_pk_list)
-        else:
-            queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__in=hobby)
-
-        serializer = MainGroupListSerializer(queryset, many=True)
-
+    def get(self, request, *args, **kwargs):
+        serializer = get_filtered_group_list(self)
         return Response(serializer.data)
 
 

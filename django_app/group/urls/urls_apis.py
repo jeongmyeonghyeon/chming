@@ -21,6 +21,7 @@ from ..apis import group, region, hobby
 urlpatterns = [
     # Group API
     url(r'^$', group.MainGroupListView.as_view()),
+    url(r'^detail/$', group.MainGroupDetailListView.as_view()),
     url(r'^all/$', group.AllGroupListView.as_view()),
     url(r'^register/$', group.GroupRegisterView.as_view()),
     url(r'^(?P<pk>\d+)/$', group.GroupRetrieveView.as_view()),
