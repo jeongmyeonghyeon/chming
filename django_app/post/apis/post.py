@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from group.models import Group
-from utils.permissions import AuthorIsRequestUser, RequestUserIsGroupMeber
+from utils.permissions import AuthorIsRequestUser
 from ..models import Post, Comment
 
 from ..serializer import PostSerializer, PostDetailSerializer, PostPagination
