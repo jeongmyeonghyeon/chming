@@ -37,6 +37,11 @@ class PostListView(generics.ListAPIView):
         # 쿼리셋이 아닌 리스트형식도 반환가능
         # 쿼리셋을 리스트로 변환하고 chain 으로 묶어준다
         queryset = list(chain(notice, post))
+        if queryset[:2] == queryset[2:4]:
+            queryset = post
+        elif queryset[0] or queryset[1] == queryset[2]:
+            queryset = list(chain(notice, post[1:]))
+
 
         page = self.paginate_queryset(queryset)
         if page is not None:
