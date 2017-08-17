@@ -26,18 +26,8 @@ __all__ = (
 
 
 class MainGroupListView(GenericAPIView):
-    serializer_class = MainGroupListSerializer
-    queryset = Group.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        serializer = get_filtered_group_list(self)
-        return Response(serializer.data)
-
-
-class MainGroupDetailListView(GenericAPIView):
     serializer_class = GroupDetailSerializer
     queryset = Group.objects.all()
-    pagination_class = GroupPagination
 
     def get(self, request, *args, **kwargs):
         serializer = get_filtered_group_list(self)
