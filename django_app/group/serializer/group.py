@@ -1,10 +1,9 @@
 from rest_framework import serializers
 
-from member.serializer import UserSerializer
-from member.serializer.user import SimpleUserSerializer, UserPKSerializer
-from post.models import Post
+from member.serializer.user import SimpleUserSerializer
 from utils.fields import CustomListField
 from ..models import Group
+from post.models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
