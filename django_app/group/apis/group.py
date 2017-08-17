@@ -1,13 +1,12 @@
 from django.db.models import Q
 
 from rest_framework import generics, permissions, status
-from rest_framework.compat import is_anonymous
 from rest_framework.exceptions import APIException
 from rest_framework.generics import get_object_or_404, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from group.serializer.group import GroupSerializer, MainGroupListSerializer, GroupDetailSerializer
+from group.serializer.group import GroupSerializer, GroupDetailSerializer, GroupListSerializer
 from .group_function import filtered_group_list as get_filtered_group_list
 from group.pagination import GroupPagination
 from utils.permissions import AuthorIsRequestUser
@@ -26,18 +25,8 @@ __all__ = (
 
 
 class MainGroupListView(GenericAPIView):
-    serializer_class = MainGroupListSerializer
+    serializer_class = GroupListSerializer
     queryset = Group.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        serializer = get_filtered_group_list(self)
-        return Response(serializer.data)
-
-
-class MainGroupDetailListView(GenericAPIView):
-    serializer_class = GroupDetailSerializer
-    queryset = Group.objects.all()
-    pagination_class = GroupPagination
 
     def get(self, request, *args, **kwargs):
         serializer = get_filtered_group_list(self)
@@ -60,12 +49,12 @@ class GroupRegisterView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        serializer.save(author=self.request.user)
         headers = self.get_success_headers(serializer.data)
         return Response({"pk": serializer.data['pk']}, status=status.HTTP_201_CREATED, headers=headers)
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save(author=self.request.user)
 
 
 class GroupRetrieveView(generics.RetrieveAPIView):
@@ -137,3 +126,12 @@ class GroupJoinView(APIView):
             raise APIException({'joined': '이미 가입한 모임입니다.'})
         instance.members.add(request.user)
         return Response({'joined': True})
+
+
+class IsValidNameView(APIView):
+    def get(self, request):
+        if Group.objects.filter(name=request.GET['name']).exists():
+            ret = {'is_valid': False}
+        else:
+            ret = {'is_valid': True}
+        return Response(ret)

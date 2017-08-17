@@ -32,6 +32,7 @@ class Group(models.Model):
         related_name='open_groups'
     )
     name = models.CharField(max_length=100)
+    # name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     image = CustomImageField(
         upload_to='group/%Y/%m/%d',
