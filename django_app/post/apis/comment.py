@@ -36,20 +36,6 @@ class CommentCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    # queryset = Comment.objects.all()
-    # serializer_class = CommentSerializer
-    #
-    # def perform_create(self, serializer):
-    #     post_pk = self.kwargs['pk']
-    #     post = Post.objects.get(pk=post_pk)
-    #     instance = serializer.save(author=self.request.user, post=post)
-    #     instance.save()
-    #
-    # def get_queryset(self):
-    #     post_pk = self.kwargs['pk']
-    #     post = Post.objects.get(pk=post_pk)
-    #     return Post.objects.filter(post=post)
-
 
 class CommentDestroyView(generics.DestroyAPIView):
     permission_classes = (
