@@ -26,7 +26,6 @@ __all__ = (
 
 class MainGroupListView(GenericAPIView):
     serializer_class = GroupListSerializer
-    queryset = Group.objects.all()
 
     def get(self, request, *args, **kwargs):
         serializer = get_filtered_group_list(self)
