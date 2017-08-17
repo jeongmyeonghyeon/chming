@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from member.serializer import UserSerializer
+from member.models import User
 from ..models import Comment, Post
 
 __all__ = (
@@ -16,8 +16,18 @@ class SimplePostSerializer(serializers.ModelSerializer):
         )
 
 
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'username',
+            'profile_img',
+        )
+
+
 class CommentSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
+    author = SimpleUserSerializer(read_only=True)
     post = SimplePostSerializer(read_only=True)
 
     class Meta:
