@@ -103,12 +103,22 @@ class PostUpdateView(generics.UpdateAPIView):
 
 
 class PostDestroyView(generics.DestroyAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         AuthorIsRequestUser,
     )
+
+    def delete(self, request, *args, **kwargs):
+        instance = Post.objects.get(pk=self.kwargs['pk'])
+
+        if request.user == instance.author:
+            instance.delete()
+        else:
+            raise APIException({"detail": "권한이 없습니다."})
+        ret = {
+            "detail": "게시글이 삭제되었습니다."
+        }
+        return Response(ret)
 
 
 class PostLikeToggleView(APIView):

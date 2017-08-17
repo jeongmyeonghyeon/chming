@@ -52,9 +52,19 @@ class CommentCreateView(generics.ListCreateAPIView):
 
 
 class CommentDestroyView(generics.DestroyAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         AuthorIsRequestUser,
     )
+
+    def delete(self, request, *args, **kwargs):
+        instance = Comment.objects.get(pk=self.kwargs['pk'])
+
+        if request.user == instance.author:
+            instance.delete()
+        else:
+            raise APIException({"detail": "권한이 없습니다."})
+        ret = {
+            "detail": "댓글이 삭제되었습니다."
+        }
+        return Response(ret)
