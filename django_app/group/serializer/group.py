@@ -9,6 +9,7 @@ from ..models import Group
 class GroupSerializer(serializers.ModelSerializer):
     lat = serializers.FloatField()
     lng = serializers.FloatField()
+    # image = serializers.ImageField()
 
     class Meta:
         model = Group
@@ -22,6 +23,15 @@ class GroupSerializer(serializers.ModelSerializer):
             'lat',
             'lng',
         )
+
+    def validate(self, data):
+        """
+        Checks to be sure that the received password and confirm_password
+        fields are exactly the same
+        """
+        if not 'image' in data:
+            data['image'] = 'images/no_image.png'
+        return data
 
 
 class GroupDetailSerializer(serializers.ModelSerializer):

@@ -29,6 +29,18 @@ class GroupSerializer(serializers.ModelSerializer):
             'lng',
         )
 
+    def to_representation(self, instance):
+        # 기존 instance 를 받아서
+        ret = super().to_representation(instance)
+        # 새로 설정할 내용을 작성하고
+        like_users_count = instance.get_all_like_users_count()
+        member_count = instance.get_all_member_count()
+        # [] 에 필드명을 지정해준다.
+        ret['member_count'] = member_count
+        ret['like_users_count'] = like_users_count
+        return ret
+
+
 # pk, category, category_detail, name, image
 
 class UserPKSerializer(serializers.ModelSerializer):
@@ -124,6 +136,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(allow_blank=False, write_only=True)
     lat = serializers.FloatField()
     lng = serializers.FloatField()
+    # profile_img = serializers.ImageField()
 
     class Meta:
         model = User
@@ -151,6 +164,8 @@ class UserSignupSerializer(serializers.ModelSerializer):
         """
         if data['password'] != data.pop('confirm_password'):
             raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
+        if not 'profile_img' in data:
+            data['profile_img'] = 'images/profile.png'
         return data
 
     def create(self, validated_data):
