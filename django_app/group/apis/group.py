@@ -49,12 +49,12 @@ class GroupRegisterView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        serializer.save(author=self.request.user)
         headers = self.get_success_headers(serializer.data)
         return Response({"pk": serializer.data['pk']}, status=status.HTTP_201_CREATED, headers=headers)
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save(author=self.request.user)
 
 
 class GroupRetrieveView(generics.RetrieveAPIView):

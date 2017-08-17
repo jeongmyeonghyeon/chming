@@ -57,6 +57,17 @@ class GroupSerializer(serializers.ModelSerializer):
             data['image'] = 'images/no_image.png'
         return data
 
+    def create(self, validated_data):
+        """
+        Creates the user if validation succeeds
+        """
+        # is_valid() 를 통해 생성된 validated_data 에서 set_password 를 위한 password 만 pop으로 추출
+        group = self.Meta.model(**validated_data)
+        group.save()
+        author = validated_data['author']
+        group.members.add(author)
+        return group
+
 
 class GroupListSerializer(serializers.ModelSerializer):
     hobby = CustomListField()
