@@ -14,7 +14,8 @@ class SimpleUserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'pk',
-            # 'nickname',
+            'username',
+            'profile_img',
         )
 
 
@@ -45,7 +46,6 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'created_date',
             'modified_date',
             'comment_set',
-            # 'hit_count',
         )
         read_only_fields = (
             'author',
@@ -69,8 +69,6 @@ class PostSerializer(serializers.ModelSerializer):
             'author',
             'created_date',
             'modified_date',
-            # 'hit_count',
-
         )
         read_only_fields = (
             'author',
