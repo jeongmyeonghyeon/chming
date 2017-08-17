@@ -54,6 +54,15 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'comment_set',
         )
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        comment_count = instance.comment_set.count()
+        postlike_count = instance.postlike_set.count()
+        ret['comments_count'] = comment_count
+        ret['post_like_count'] = postlike_count
+
+        return ret
+
 
 class PostSerializer(serializers.ModelSerializer):
     author = SimpleUserSerializer(read_only=True)
@@ -89,4 +98,3 @@ class PostSerializer(serializers.ModelSerializer):
         ret['post_like_count'] = postlike_count
 
         return ret
-
