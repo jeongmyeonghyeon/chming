@@ -126,3 +126,12 @@ class GroupJoinView(APIView):
             raise APIException({'joined': '이미 가입한 모임입니다.'})
         instance.members.add(request.user)
         return Response({'joined': True})
+
+
+class IsValidNameView(APIView):
+    def get(self, request):
+        if Group.objects.filter(name=request.GET['name']).exists():
+            ret = {'is_valid': False}
+        else:
+            ret = {'is_valid': True}
+        return Response(ret)
