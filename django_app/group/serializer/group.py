@@ -29,7 +29,6 @@ class GroupSerializer(serializers.ModelSerializer):
         Checks to be sure that the received password and confirm_password
         fields are exactly the same
         """
-        data
         if not 'image' in data:
             data['image'] = 'images/no_image.png'
         return data
