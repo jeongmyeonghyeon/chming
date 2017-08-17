@@ -36,7 +36,6 @@ class MainGroupListView(GenericAPIView):
 class AllGroupListView(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupDetailSerializer
-    pagination_class = GroupPagination
 
 
 class GroupRegisterView(generics.CreateAPIView):
