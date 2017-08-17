@@ -68,7 +68,6 @@ class Group(models.Model):
     def get_all_like_users_count(self):
         return self.like_users.count()
 
-
     def get_distance(self, origin_lat, origin_lng):
         target_lat = self.lat
         target_lng = self.lng
