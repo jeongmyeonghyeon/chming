@@ -136,6 +136,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(allow_blank=False, write_only=True)
     lat = serializers.FloatField()
     lng = serializers.FloatField()
+    # profile_img = serializers.ImageField()
 
     class Meta:
         model = User
@@ -163,6 +164,8 @@ class UserSignupSerializer(serializers.ModelSerializer):
         """
         if data['password'] != data.pop('confirm_password'):
             raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
+        if not 'profile_img' in data:
+            data['profile_img'] = 'images/profile.png'
         return data
 
     def create(self, validated_data):
