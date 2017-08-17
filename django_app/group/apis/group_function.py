@@ -50,10 +50,17 @@ def filtered_group_list(self):
 
     groups = Group.objects.iterator()
     filter_group_pk_list = []
+    distance_dict = {}
     for group in groups:
         distance = group.get_distance(origin_lat, origin_lng)
         if distance < distance_limit:
             filter_group_pk_list.append(group.pk)
+
+    #         distance_dict[group.pk] = distance
+    # import operator
+    # sorted_distance_dict = dict(sorted(distance_dict.items(), key=operator.itemgetter(1)))
+    # print(sorted_distance_dict.keys())
+
     if not len(filter_group_pk_list):
         raise APIException({'result': '검색결과가 없습니다.'})
 
