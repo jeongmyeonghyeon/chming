@@ -1,13 +1,12 @@
 from django.db.models import Q
 
 from rest_framework import generics, permissions, status
-from rest_framework.compat import is_anonymous
 from rest_framework.exceptions import APIException
 from rest_framework.generics import get_object_or_404, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from group.serializer.group import GroupSerializer, MainGroupListSerializer, GroupDetailSerializer
+from group.serializer.group import GroupSerializer, GroupDetailSerializer, GroupListSerializer
 from .group_function import filtered_group_list as get_filtered_group_list
 from group.pagination import GroupPagination
 from utils.permissions import AuthorIsRequestUser
@@ -26,7 +25,7 @@ __all__ = (
 
 
 class MainGroupListView(GenericAPIView):
-    serializer_class = GroupDetailSerializer
+    serializer_class = GroupListSerializer
     queryset = Group.objects.all()
 
     def get(self, request, *args, **kwargs):
