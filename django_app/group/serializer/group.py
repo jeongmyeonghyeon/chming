@@ -95,15 +95,11 @@ class GroupListSerializer(serializers.ModelSerializer):
             'like_users',
         )
 
-    # 모델에 없는 필드 추가해서 보내기
     def to_representation(self, instance):
-        # 기존 instance 를 받아서
         ret = super().to_representation(instance)
-        # 새로 설정할 내용을 작성하고
+
         like_users_count = instance.get_all_like_users_count()
         member_count = instance.get_all_member_count()
-        # group = Group.objects.filter(pk=self.pk)
-        # [] 에 필드명을 지정해준다.
         ret['member_count'] = member_count
         ret['like_users_count'] = like_users_count
         return ret

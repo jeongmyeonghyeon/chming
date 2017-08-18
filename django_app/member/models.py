@@ -47,7 +47,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, unique=True)
-    username = models.CharField(max_length=24, unique=True)
+    username = models.CharField(max_length=24)
     profile_img = CustomImageField(
         upload_to='user/%Y/%m/%d/',
         blank=True,

@@ -31,8 +31,7 @@ class Group(models.Model):
         base.AUTH_USER_MODEL,
         related_name='open_groups'
     )
-    name = models.CharField(max_length=100)
-    # name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     image = CustomImageField(
         upload_to='group/%Y/%m/%d',
@@ -67,7 +66,6 @@ class Group(models.Model):
 
     def get_all_like_users_count(self):
         return self.like_users.count()
-
 
     def get_distance(self, origin_lat, origin_lng):
         target_lat = self.lat
