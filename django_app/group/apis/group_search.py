@@ -14,8 +14,10 @@ from group.serializer.group import GroupListSerializer
 class GroupSearchView(APIView):
     def get(self, request, *args, **kwargs):
         search = self.request.GET.get("search")
+
         if search is None or search == " ":
             raise APIException({'result': '검색어를 입력해주세요.'})
+
         search = self.request.GET.get("search").split()
         search_type = self.request.GET.get("search_type", "all")
 
