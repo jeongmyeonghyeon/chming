@@ -87,6 +87,11 @@ class UserSerializer(serializers.ModelSerializer):
             'like_groups',
         )
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['joined_groups'] = instance.joined_groups.all().exclude(author=instance)
+        return ret
+
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     lat = serializers.FloatField()
