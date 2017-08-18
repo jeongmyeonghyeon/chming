@@ -20,3 +20,10 @@ HobbyGroup.objects.create(category='음악/악기', category_detail='클래식')
 HobbyGroup.objects.create(category='반려동물', category_detail='강아지')
 HobbyGroup.objects.create(category='반려동물', category_detail='고양이')
 
+datas = [{"si": "서울시","gu": "송파구","dong": "잠실동","lat": 37.511496, "lng": 127.083149},{"si": "서울시","gu": "서초구","dong": "방배동","lat": 37.494371,"lng": 127.989336},{"si": "서울시","gu": "관악구","dong": "신림동","lat": 37.484223,"lng": 127.929597},{"si": "서울시","gu": "마포구","dong": "동교동","lat": 37.556553,"lng": 127.923418},{"si": "서울시","gu": "강남구","dong": "신사동","lat": 37.515649,"lng": 127.019462}]
+datas = [{"category": "운동/스포츠","category_detail": "축구"},{"category": "운동/스포츠","category_detail": "농구"},{"category": "운동/스포츠","category_detail": "야구"},{"category": "음악/악기","category_detail": "베이스"},{"category": "음악/악기","category_detail": "피아노"},{"category": "음악/악기","category_detail": "기타"},{"category": "외국/언어","category_detail": "영어"},{"category": "외국/언어","category_detail": "불어"}]
+
+for i in range(len(datas)):
+    serializer = RegionSerializer(data=datas[i])
+    serializer.is_valid()
+    serializer.save()
