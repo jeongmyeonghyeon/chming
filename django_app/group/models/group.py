@@ -56,7 +56,7 @@ class Group(models.Model):
         return self.name
 
     def get_all_member(self):
-        return self.members.all()
+        return self.members.all().exclude(email=self.author.email)
 
     def get_all_member_count(self):
         return self.members.count()
