@@ -101,7 +101,7 @@ class GroupListSerializer(serializers.ModelSerializer):
         like_users_count = instance.get_all_like_users_count()
         member_count = instance.get_all_member_count()
         ret['members'] = SimpleUserSerializer(instance.get_all_member(), many=True).data
-        ret['member_count'] = member_count
+        ret['member_count'] = member_count - 1
         ret['like_users_count'] = like_users_count
         return ret
 
@@ -144,7 +144,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
         ret['members'] = SimpleUserSerializer(instance.get_all_member(), many=True).data
         notice = Post.objects.filter(group=self._args[0]).exclude(post_type='False').order_by('-modified_date')[:2]
         ret['notice'] = PostSerializer(notice, many=True).data
-        ret['member_count'] = member_count
+        ret['member_count'] = member_count - 1
         ret['like_users_count'] = like_users_count
         return ret
 
