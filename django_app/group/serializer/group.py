@@ -74,7 +74,7 @@ class GroupListSerializer(serializers.ModelSerializer):
     author = SimpleUserSerializer(read_only=True)
     lat = serializers.FloatField()
     lng = serializers.FloatField()
-    members = SimpleUserSerializer(many=True)
+    # members = SimpleUserSerializer(many=True)
     like_users = SimpleUserSerializer(many=True)
 
     class Meta:
@@ -91,7 +91,7 @@ class GroupListSerializer(serializers.ModelSerializer):
             'author',
             'created_date',
             'modified_date',
-            'members',
+            # 'members',
             'like_users',
         )
 
@@ -100,6 +100,7 @@ class GroupListSerializer(serializers.ModelSerializer):
 
         like_users_count = instance.get_all_like_users_count()
         member_count = instance.get_all_member_count()
+        ret['members'] = SimpleUserSerializer(instance.get_all_member(), many=True).data
         ret['member_count'] = member_count
         ret['like_users_count'] = like_users_count
         return ret
@@ -110,7 +111,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
     author = SimpleUserSerializer(read_only=True)
     lat = serializers.FloatField()
     lng = serializers.FloatField()
-    members = SimpleUserSerializer(many=True)
+    # members = SimpleUserSerializer(many=True)
     like_users = SimpleUserSerializer(many=True)
 
     class Meta:
@@ -127,7 +128,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
             'author',
             'created_date',
             'modified_date',
-            'members',
+            # 'members',
             'like_users',
         )
 
@@ -140,6 +141,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
         member_count = instance.get_all_member_count()
         # group = Group.objects.filter(pk=self.pk)
         # [] 에 필드명을 지정해준다.
+        ret['members'] = SimpleUserSerializer(instance.get_all_member(), many=True).data
         notice = Post.objects.filter(group=self._args[0]).exclude(post_type='False').order_by('-modified_date')[:2]
         ret['notice'] = PostSerializer(notice, many=True).data
         ret['member_count'] = member_count
