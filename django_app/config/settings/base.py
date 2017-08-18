@@ -141,8 +141,7 @@ REST_FRAMEWORK = {
     # 'DEFAULT_RENDERER_CLASSES': (
     #     'rest_framework.renderers.JSONRenderer',
     # )
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
-
-DATETIME_FORMAT = '%d-%m-%Y %H:%M:S'

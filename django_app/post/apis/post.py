@@ -40,7 +40,7 @@ class PostListView(generics.ListAPIView):
 
         if queryset[:2] == queryset[2:4] or queryset[:2] == queryset[2:4][::-1]:
             queryset = post
-        elif queryset[0] or queryset[1] == queryset[2]:
+        elif queryset[0] == queryset[2] or queryset[1] == queryset[2]:
             queryset = list(chain(notice, post[1:]))
 
         page = self.paginate_queryset(queryset)
