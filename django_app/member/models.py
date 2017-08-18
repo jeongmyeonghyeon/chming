@@ -86,7 +86,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.groupLike_set.all()
 
     def get_all_joined_groups(self):
-        return self.joined_groups.all().exclude(author=self)
+        if self.joined_groups.all().exclude(author=self).exists():
+            return self.joined_groups.all().exclude(author=self)
+        return []
 
 
 
