@@ -89,7 +89,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['joined_groups'] = instance.joined_groups.all().exclude(author=instance)
+        ret['joined_groups'] = instance.get_all_joined_groups()
         return ret
 
 
