@@ -1,6 +1,4 @@
-from django.db.models import Q
-
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, filters
 from rest_framework.exceptions import APIException
 from rest_framework.generics import get_object_or_404, GenericAPIView
 from rest_framework.response import Response
@@ -8,12 +6,13 @@ from rest_framework.views import APIView
 
 from group.serializer.group import GroupSerializer, GroupDetailSerializer, GroupListSerializer
 from .group_function import filtered_group_list as get_filtered_group_list
-from group.pagination import GroupPagination
+
 from utils.permissions import AuthorIsRequestUser
 from ..models import Group
 
 __all__ = (
     'MainGroupListView',
+    'SearchGroupListView',
     'AllGroupListView',
     'GroupRegisterView',
     'GroupRetrieveView',
@@ -21,6 +20,7 @@ __all__ = (
     'GroupDestroyView',
     'GroupLikeToggleView',
     'GroupJoinView',
+    'GroupSearchView',
 )
 
 
@@ -30,6 +30,20 @@ class MainGroupListView(GenericAPIView):
     def get(self, request, *args, **kwargs):
         serializer = get_filtered_group_list(self)
         return Response(serializer.data)
+
+
+class SearchGroupListView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupListSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('=hobby', 'name', 'description', 'address')
+
+
+class SearchGroupListView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupListSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('=hobby', 'name', 'description', 'address')
 
 
 class AllGroupListView(generics.ListAPIView):
@@ -51,8 +65,8 @@ class GroupRegisterView(generics.CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         return Response({"pk": serializer.data['pk']}, status=status.HTTP_201_CREATED, headers=headers)
 
-    # def perform_create(self, serializer):
-    #     serializer.save(author=self.request.user)
+        # def perform_create(self, serializer):
+        #     serializer.save(author=self.request.user)
 
 
 class GroupRetrieveView(generics.RetrieveAPIView):

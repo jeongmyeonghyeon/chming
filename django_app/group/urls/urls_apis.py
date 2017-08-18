@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from ..apis import group, region, hobby
+from ..apis import group, group_search, region, hobby
 
 urlpatterns = [
     # Group API
@@ -29,6 +29,9 @@ urlpatterns = [
     url(r'^(?P<group_pk>\d+)/like_toggle/$', group.GroupLikeToggleView.as_view()),
     url(r'^(?P<group_pk>\d+)/join/$', group.GroupJoinView.as_view()),
     url(r'^validate_name/$', group.IsValidNameView.as_view()),
+
+    # Group Search API
+    url(r'^search/', group_search.GroupSearchView.as_view()),
 
     # Post API
     url(r'^(?P<group_pk>\d+)/post/', include('post.urls.urls_apis')),

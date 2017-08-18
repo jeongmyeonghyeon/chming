@@ -2,7 +2,6 @@ from rest_framework.compat import is_anonymous
 from rest_framework.exceptions import APIException
 
 from group.models import Group
-from group.pagination import GroupPagination
 
 
 def filtered_group_list(self):
@@ -56,7 +55,7 @@ def filtered_group_list(self):
         if distance < distance_limit:
             filter_group_pk_list.append(group.pk)
 
-    #         distance_dict[group.pk] = distance
+    # distance_dict[group.pk] = distance
     # import operator
     # sorted_distance_dict = dict(sorted(distance_dict.items(), key=operator.itemgetter(1)))
     # print(sorted_distance_dict.keys())

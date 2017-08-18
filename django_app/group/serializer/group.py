@@ -28,6 +28,19 @@ class PostSerializer(serializers.ModelSerializer):
             'comment_set',
         )
 
+    # 모델에 없는 필드 추가해서 보내기
+    def to_representation(self, instance):
+        # 기존 instance 를 받아서
+        ret = super().to_representation(instance)
+        # 새로 설정할 내용을 작성하고
+        comment_count = instance.comment_set.count()
+        postlike_count = instance.postlike_set.count()
+        # [] 에 필드명을 지정해준다.
+        ret['comments_count'] = comment_count
+        ret['post_like_count'] = postlike_count
+
+        return ret
+
 
 class GroupSerializer(serializers.ModelSerializer):
     lat = serializers.FloatField()
