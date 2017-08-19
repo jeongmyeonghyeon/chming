@@ -12,7 +12,6 @@ from ..models import Group
 
 __all__ = (
     'MainGroupListView',
-    'SearchGroupListView',
     'AllGroupListView',
     'GroupRegisterView',
     'GroupRetrieveView',
@@ -20,7 +19,7 @@ __all__ = (
     'GroupDestroyView',
     'GroupLikeToggleView',
     'GroupJoinView',
-    'GroupSearchView',
+    'IsValidNameView',
 )
 
 
@@ -32,23 +31,16 @@ class MainGroupListView(GenericAPIView):
         return Response(serializer.data)
 
 
-class SearchGroupListView(generics.ListAPIView):
-    queryset = Group.objects.all()
-    serializer_class = GroupListSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('=hobby', 'name', 'description', 'address')
-
-
-class SearchGroupListView(generics.ListAPIView):
-    queryset = Group.objects.all()
-    serializer_class = GroupListSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('=hobby', 'name', 'description', 'address')
-
-
-class AllGroupListView(generics.ListAPIView):
+class AllGroupListView2(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupDetailSerializer
+
+
+class AllGroupListView(APIView):
+    def get(self, request, *args, **kwargs):
+        serializer = GroupDetailSerializer(Group.objects.all(), many=True)
+        return Response(serializer.data)
+
 
 
 class GroupRegisterView(generics.CreateAPIView):
