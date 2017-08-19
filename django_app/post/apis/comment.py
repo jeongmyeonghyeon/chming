@@ -45,8 +45,9 @@ class CommentDestroyView(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         instance = Comment.objects.get(pk=self.kwargs['pk'])
+        group_instance = Group.objects.get(pk=self.kwargs['group_pk'])
 
-        if request.user == instance.author:
+        if request.user == instance.author or request.user == group_instance.author:
             instance.delete()
         else:
             raise APIException({"detail": "권한이 없습니다."})

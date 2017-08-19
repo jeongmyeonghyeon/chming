@@ -128,8 +128,9 @@ class PostDestroyView(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         instance = Post.objects.get(pk=self.kwargs['pk'])
+        group_instance = Group.objects.get(pk=self.kwargs['group_pk'])
 
-        if request.user == instance.author:
+        if request.user == instance.author or request.user == group_instance.author:
             instance.delete()
         else:
             raise APIException({"detail": "권한이 없습니다."})
@@ -147,4 +148,7 @@ class PostLikeToggleView(APIView):
         )
         if not post_like_created:
             post_like.delete()
-        return Response({'created': post_like_created})
+        return Response({
+            'created': post_like_created,
+            'user_pk': request.user.id,
+        })
