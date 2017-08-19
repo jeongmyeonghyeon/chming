@@ -29,12 +29,13 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
 
 class SimpleCommentSerializer(serializers.ModelSerializer):
+    author = SimpleUserSerializer(read_only=True)
+
     class Meta:
         model = Comment
         fields = (
             'pk',
             'author',
-            'username',
             'content',
             'created_date',
         )
