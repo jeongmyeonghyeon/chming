@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from group.models import Group
 from member.models import User
 from ..models import Post, Comment
 
@@ -7,6 +8,14 @@ __all__ = (
     'PostSerializer',
     'PostDetailSerializer',
 )
+
+
+class SimpleGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = (
+            'author',
+        )
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
@@ -33,10 +42,12 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
 class PostDetailSerializer(serializers.ModelSerializer):
     author = SimpleUserSerializer(read_only=True)
     comment_set = SimpleCommentSerializer(read_only=True, many=True)
+    group = SimpleGroupSerializer(read_only=True)
 
     class Meta:
         model = Post
         fields = (
+            'group',
             'pk',
             'post_type',
             'title',
