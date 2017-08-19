@@ -1,9 +1,19 @@
 from rest_framework import serializers
 
-from member.serializer.user import SimpleUserSerializer
+from member.models import User
 from utils.fields import CustomListField
 from ..models import Group
 from post.models import Post
+
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'profile_img',
+            'username',
+        )
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -42,7 +52,7 @@ class PostSerializer(serializers.ModelSerializer):
         return ret
 
 
-class GroupSerializer(serializers.ModelSerializer):
+class GroupRegisterSerializer(serializers.ModelSerializer):
     lat = serializers.FloatField()
     lng = serializers.FloatField()
 
@@ -80,6 +90,26 @@ class GroupSerializer(serializers.ModelSerializer):
         author = validated_data['author']
         group.members.add(author)
         return group
+
+
+class GroupUpdateSerializer(serializers.ModelSerializer):
+    lat = serializers.FloatField()
+    lng = serializers.FloatField()
+
+    # image = serializers.ImageField()
+
+    class Meta:
+        model = Group
+        fields = (
+            'pk',
+            'hobby',
+            'image',
+            'name',
+            'description',
+            'address',
+            'lat',
+            'lng',
+        )
 
 
 class GroupListSerializer(serializers.ModelSerializer):

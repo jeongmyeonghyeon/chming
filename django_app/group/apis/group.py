@@ -4,7 +4,8 @@ from rest_framework.generics import get_object_or_404, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from group.serializer.group import GroupSerializer, GroupDetailSerializer, GroupListSerializer
+from group.serializer.group import GroupDetailSerializer, GroupListSerializer, GroupRegisterSerializer, \
+    GroupUpdateSerializer
 from .group_function import filtered_group_list as get_filtered_group_list
 
 from utils.permissions import AuthorIsRequestUser
@@ -42,10 +43,9 @@ class AllGroupListView(APIView):
         return Response(serializer.data)
 
 
-
 class GroupRegisterView(generics.CreateAPIView):
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = GroupRegisterSerializer
     permission_classes = (
         permissions.IsAuthenticated,
     )
@@ -78,7 +78,7 @@ class GroupUpdateView(APIView):
     def put(self, request, group_pk, **kwargs):
         partial = kwargs.pop('partial', True)
         instance = Group.objects.get(pk=group_pk)
-        serializer = GroupSerializer(instance, data=request.data, partial=partial)
+        serializer = GroupUpdateSerializer(instance, data=request.data, partial=partial)
         if request.user == instance.author:
             serializer.is_valid(raise_exception=True)
             serializer.save()
