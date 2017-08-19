@@ -1,14 +1,13 @@
-from django.db.models import Q
-
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, filters
 from rest_framework.exceptions import APIException
 from rest_framework.generics import get_object_or_404, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from group.serializer.group import GroupSerializer, GroupDetailSerializer, GroupListSerializer
+from group.serializer.group import GroupDetailSerializer, GroupListSerializer, GroupRegisterSerializer, \
+    GroupUpdateSerializer
 from .group_function import filtered_group_list as get_filtered_group_list
-from group.pagination import GroupPagination
+
 from utils.permissions import AuthorIsRequestUser
 from ..models import Group
 
@@ -21,6 +20,7 @@ __all__ = (
     'GroupDestroyView',
     'GroupLikeToggleView',
     'GroupJoinView',
+    'IsValidNameView',
 )
 
 
@@ -32,14 +32,20 @@ class MainGroupListView(GenericAPIView):
         return Response(serializer.data)
 
 
-class AllGroupListView(generics.ListAPIView):
+class AllGroupListView2(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupDetailSerializer
 
 
+class AllGroupListView(APIView):
+    def get(self, request, *args, **kwargs):
+        serializer = GroupDetailSerializer(Group.objects.all(), many=True)
+        return Response(serializer.data)
+
+
 class GroupRegisterView(generics.CreateAPIView):
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = GroupRegisterSerializer
     permission_classes = (
         permissions.IsAuthenticated,
     )
@@ -51,8 +57,8 @@ class GroupRegisterView(generics.CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         return Response({"pk": serializer.data['pk']}, status=status.HTTP_201_CREATED, headers=headers)
 
-    # def perform_create(self, serializer):
-    #     serializer.save(author=self.request.user)
+        # def perform_create(self, serializer):
+        #     serializer.save(author=self.request.user)
 
 
 class GroupRetrieveView(generics.RetrieveAPIView):
@@ -72,7 +78,7 @@ class GroupUpdateView(APIView):
     def put(self, request, group_pk, **kwargs):
         partial = kwargs.pop('partial', True)
         instance = Group.objects.get(pk=group_pk)
-        serializer = GroupSerializer(instance, data=request.data, partial=partial)
+        serializer = GroupUpdateSerializer(instance, data=request.data, partial=partial)
         if request.user == instance.author:
             serializer.is_valid(raise_exception=True)
             serializer.save()

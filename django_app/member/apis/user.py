@@ -1,13 +1,8 @@
-from django.contrib.auth import authenticate, login
-from rest_framework import generics, permissions, status, mixins
+from rest_framework import generics, permissions, status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-# from member.pagination import UserPagination
-from group.models import Group
-from group.serializer.group import GroupSerializer
-from utils.permissions import ObjectIsRequestUser
 from ..serializer import UserSerializer, UserSignupSerializer, UserUpdateSerializer
 from ..models import User
 

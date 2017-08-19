@@ -2,7 +2,6 @@ from rest_framework.compat import is_anonymous
 from rest_framework.exceptions import APIException
 
 from group.models import Group
-from group.pagination import GroupPagination
 
 
 def filtered_group_list(self):
@@ -21,13 +20,13 @@ def filtered_group_list(self):
             distance = group.get_distance(origin_lat, origin_lng)
             if distance < distance_limit:
                 filter_group_pk_list.append(group.pk)
-        if not len(filter_group_pk_list):
-            raise APIException({'result': '검색결과가 없습니다.'})
+        # if not len(filter_group_pk_list):
+        #     raise APIException({'result': '검색결과가 없습니다.'})
 
         queryset = Group.objects.filter(pk__in=filter_group_pk_list).filter(hobby__in=hobby)
 
-        if not queryset:
-            raise APIException({'result': '검색결과가 없습니다.'})
+        # if not queryset:
+        #     raise APIException({'result': '검색결과가 없습니다.'})
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -56,13 +55,13 @@ def filtered_group_list(self):
         if distance < distance_limit:
             filter_group_pk_list.append(group.pk)
 
-    #         distance_dict[group.pk] = distance
+    # distance_dict[group.pk] = distance
     # import operator
     # sorted_distance_dict = dict(sorted(distance_dict.items(), key=operator.itemgetter(1)))
     # print(sorted_distance_dict.keys())
 
-    if not len(filter_group_pk_list):
-        raise APIException({'result': '검색결과가 없습니다.'})
+    # if not len(filter_group_pk_list):
+    #     raise APIException({'result': '검색결과가 없습니다.'})
 
     if not hobby:
         queryset = Group.objects.filter(pk__in=filter_group_pk_list)

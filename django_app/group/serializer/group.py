@@ -1,9 +1,19 @@
 from rest_framework import serializers
 
-from member.serializer.user import SimpleUserSerializer
+from member.models import User
 from utils.fields import CustomListField
 from ..models import Group
 from post.models import Post
+
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'profile_img',
+            'username',
+        )
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -28,8 +38,21 @@ class PostSerializer(serializers.ModelSerializer):
             'comment_set',
         )
 
+    # 모델에 없는 필드 추가해서 보내기
+    def to_representation(self, instance):
+        # 기존 instance 를 받아서
+        ret = super().to_representation(instance)
+        # 새로 설정할 내용을 작성하고
+        comment_count = instance.comment_set.count()
+        postlike_count = instance.postlike_set.count()
+        # [] 에 필드명을 지정해준다.
+        ret['comments_count'] = comment_count
+        ret['post_like_count'] = postlike_count
 
-class GroupSerializer(serializers.ModelSerializer):
+        return ret
+
+
+class GroupRegisterSerializer(serializers.ModelSerializer):
     lat = serializers.FloatField()
     lng = serializers.FloatField()
 
@@ -67,6 +90,26 @@ class GroupSerializer(serializers.ModelSerializer):
         author = validated_data['author']
         group.members.add(author)
         return group
+
+
+class GroupUpdateSerializer(serializers.ModelSerializer):
+    lat = serializers.FloatField()
+    lng = serializers.FloatField()
+
+    # image = serializers.ImageField()
+
+    class Meta:
+        model = Group
+        fields = (
+            'pk',
+            'hobby',
+            'image',
+            'name',
+            'description',
+            'address',
+            'lat',
+            'lng',
+        )
 
 
 class GroupListSerializer(serializers.ModelSerializer):
