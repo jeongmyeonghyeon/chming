@@ -135,7 +135,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
             # setattr(x, 'y', v) is equivalent to ``x.y = v''
             setattr(instance, attr, value)
-        instance.set_password(password)
+        if password is not None:
+            instance.set_password(password)
         instance.save()
 
         return instance
