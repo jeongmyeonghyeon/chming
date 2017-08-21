@@ -3,7 +3,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..serializer import UserSerializer, UserSignupSerializer, UserUpdateSerializer
+from ..serializer import UserSerializer, UserSignupSerializer, UserUpdateSerializer, UserProfileImageDeleteSerializer
 from ..models import User
 
 __all__ = (
@@ -12,6 +12,7 @@ __all__ = (
     'UserProfileView',
     'UserDeleteView',
     'IsValidEmailView',
+    'UserProfileImageDeleteView',
 )
 
 
@@ -94,3 +95,13 @@ class IsValidEmailView(APIView):
         else:
             ret = {'is_valid': True}
         return Response(ret)
+
+
+class UserProfileImageDeleteView(APIView):
+    def put(self, request, **kwargs):
+        partial = kwargs.pop('partial', True)
+        instance = request.user
+        serializer = UserProfileImageDeleteSerializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"pk": instance.pk})

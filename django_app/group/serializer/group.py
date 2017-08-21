@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.serializers import raise_errors_on_nested_writes
 
 from member.models import User
 from utils.fields import CustomListField
@@ -201,3 +202,27 @@ class MainGroupListSerializer(serializers.ModelSerializer):
             'lat',
             'lng',
         )
+
+
+class GroupImageDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = (
+            'pk',
+            'image',
+        )
+
+    def validate(self, data):
+        if not 'image' in data:
+            data['image'] = 'images/no_image.png'
+        return data
+
+    def update(self, instance, validated_data):
+        raise_errors_on_nested_writes('update', self, validated_data)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+
+        return instance

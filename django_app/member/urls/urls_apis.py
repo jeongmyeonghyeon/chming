@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^logout/$', apis.Logout.as_view()),
     # User - Detail/Update/Delete
     url(r'^profile/$', apis.UserProfileView.as_view()),
+    url(r'^profile/image_delete/$', apis.UserProfileImageDeleteView.as_view()),
     url(r'^delete/$', apis.UserDeleteView.as_view()),
 
     url(r'^validate_email/$', apis.IsValidEmailView.as_view()),

@@ -9,6 +9,7 @@ __all__ = (
     'UserSerializer',
     'UserSignupSerializer',
     'UserUpdateSerializer',
+    'UserProfileImageDeleteSerializer',
 )
 
 
@@ -192,3 +193,24 @@ class UserSignupSerializer(serializers.ModelSerializer):
         # return user 를 주석처리해도 데이터베이스에는 유저가 추가됨...
         user.save()
         return user
+
+
+class UserProfileImageDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('profile_img',)
+
+    def validate(self, data):
+        if not 'profile_img' in data:
+            data['profile_img'] = 'images/profile.png'
+        return data
+
+    def update(self, instance, validated_data):
+        raise_errors_on_nested_writes('update', self, validated_data)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+
+        return instance
