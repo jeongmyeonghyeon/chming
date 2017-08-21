@@ -122,6 +122,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         # info = model_meta.get_field_info(instance)
 
         password = validated_data.pop('password', None)
+
         for attr, value in validated_data.items():
             # # 다대다 관계에 대한 어떤 처리를 다룬 것 같다.
             # # 그게 구체적으로 어떤 처리인지 모르겠다. (아마 다대다 관계의 인스턴스의 필드를 불러와 그 부분까지 수정해주는 정도로 이해된다.
@@ -143,6 +144,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(allow_blank=False, write_only=True)
     lat = serializers.FloatField()
     lng = serializers.FloatField()
+
     # profile_img = serializers.ImageField()
 
     class Meta:
