@@ -20,7 +20,7 @@ DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
 STATICFILES_STORAGE = 'config.storages.StaticStorage'
 
 # Static URLs
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 MEDIA_URL = '/media/'
 
 # 배포모드니까 DEBUG는 False

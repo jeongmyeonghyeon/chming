@@ -18,6 +18,13 @@ COPY        .config/nginx/nginx-app.conf /etc/nginx/sites-available/nginx-app.co
 RUN         rm -rf /etc/nginx/sites-enabled/default
 RUN         ln -sf /etc/nginx/sites-available/nginx-app.conf /etc/nginx/sites-enabled/nginx-app.conf
 
+# front 프로젝트 복사
+WORKDIR     /srv
+RUN         git clone https://github.com/publisherKim/Chming.git front
+WORKDIR     /srv/front
+RUN         npm install
+RUN         npm run build
+
 # collectstatic
 #RUN         /root/.pyenv/versions/chming/bin/python /srv/chming/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
 
