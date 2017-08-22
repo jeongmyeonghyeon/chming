@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import APIException
 from rest_framework.generics import get_object_or_404
@@ -37,15 +39,8 @@ class PostListView(generics.ListAPIView):
         # 쿼리셋이 아닌 리스트형식도 반환가능
         # 쿼리셋을 리스트로 변환하고 chain 으로 묶어준다
         queryset = list(chain(notice, post))
-        try:
-            if queryset[:2] == queryset[2:4] or \
-                queryset[:2] == queryset[2:4][::-1] or \
-                    queryset[0] == queryset[1]:
-                queryset = list(chain(notice, post[2:]))
-            elif queryset[0] == queryset[2] or queryset[1] == queryset[2]:
-                queryset = list(chain(notice, post[1:]))
-        except IndexError:
-            pass
+        # 리스트의 순서를 유지하면서 중복값은 제거한다.
+        queryset = list(OrderedDict.fromkeys(queryset))
 
         page = self.paginate_queryset(queryset)
         if page is not None:
