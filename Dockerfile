@@ -20,10 +20,10 @@ RUN         ln -sf /etc/nginx/sites-available/nginx-app.conf /etc/nginx/sites-en
 
 # front 프로젝트 복사
 WORKDIR     /srv
-RUN         git clone https://github.com/publisherKim/Chming.git front
-WORKDIR     /srv/front
-RUN         npm install
-RUN         npm run build
+RUN         git clone https://github.com/jeongmyeonghyeon/chming-front.git front
+#WORKDIR     /srv/front
+#RUN         npm install
+#RUN         npm run build
 
 # collectstatic
 #RUN         /root/.pyenv/versions/chming/bin/python /srv/chming/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
