@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from group.serializer.group import GroupDetailSerializer, GroupListSerializer, GroupRegisterSerializer, \
-    GroupUpdateSerializer
+    GroupUpdateSerializer, GroupImageDeleteSerializer
 from .group_function import filtered_group_list as get_filtered_group_list
 
 from utils.permissions import AuthorIsRequestUser
@@ -21,6 +21,7 @@ __all__ = (
     'GroupLikeToggleView',
     'GroupJoinView',
     'IsValidNameView',
+    'GroupImageDeleteView',
 )
 
 
@@ -138,4 +139,25 @@ class IsValidNameView(APIView):
             ret = {'is_valid': False}
         else:
             ret = {'is_valid': True}
+        return Response(ret)
+
+
+class GroupImageDeleteView(APIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        AuthorIsRequestUser
+    )
+
+    def put(self, request, group_pk, **kwargs):
+        partial = kwargs.pop('partial', True)
+        instance = Group.objects.get(pk=group_pk)
+        serializer = GroupImageDeleteSerializer(instance, data=request.data, partial=partial)
+        if request.user == instance.author:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        else:
+            raise APIException({"detail": "권한이 없습니다."})
+        ret = {
+            "pk": serializer.data['pk']
+        }
         return Response(ret)

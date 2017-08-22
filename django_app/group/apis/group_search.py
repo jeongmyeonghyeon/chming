@@ -22,7 +22,7 @@ class GroupSearchView(APIView):
         search_type = self.request.GET.get("search_type", "all")
 
         if search_type == "hobby":
-            queryset = Group.objects.filter(hobby__in=search)
+            queryset = Group.objects.filter(reduce(operator.or_, (Q(hobby__contains=x) for x in search)))
         elif search_type == "group":
             queryset = Group.objects.filter(reduce(operator.or_, (Q(name__contains=x) for x in search)) |
                                             reduce(operator.or_, (Q(description__contains=x) for x in search))

@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^register/$', group.GroupRegisterView.as_view()),
     url(r'^(?P<pk>\d+)/$', group.GroupRetrieveView.as_view()),
     url(r'^(?P<group_pk>\d+)/edit/$', group.GroupUpdateView.as_view()),
+    url(r'^(?P<group_pk>\d+)/edit/image_delete/$', group.GroupImageDeleteView.as_view()),
     url(r'^(?P<group_pk>\d+)/delete/$', group.GroupDestroyView.as_view()),
     url(r'^(?P<group_pk>\d+)/like_toggle/$', group.GroupLikeToggleView.as_view()),
     url(r'^(?P<group_pk>\d+)/join/$', group.GroupJoinView.as_view()),
