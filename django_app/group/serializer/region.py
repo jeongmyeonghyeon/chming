@@ -11,9 +11,9 @@ class RegionSerializer(serializers.ModelSerializer):
         model = Region
         fields = (
             'pk',
-            'si',
-            'gu',
-            'dong',
+            'level1',
+            'level2',
+            'level3',
             'lat',
             'lng',
         )
