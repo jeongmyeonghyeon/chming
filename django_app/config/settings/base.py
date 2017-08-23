@@ -142,9 +142,9 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
     ),
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'rest_framework.renderers.JSONRenderer',
-    # )
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
 }
 
