@@ -40,4 +40,4 @@ RUN         /root/.pyenv/versions/chming/bin/pip install uwsgi
 RUN         apt-get -y install nginx
 
 # supervisor install
-RUN         apt-get -y install supervisor
+#RUN         apt-get -y install supervisor
