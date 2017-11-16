@@ -31,7 +31,7 @@ RUN         git clone https://github.com/jeongmyeonghyeon/chming-front.git front
 EXPOSE      80 8000
 
 #CMD         supervisord -n
-RUN         chmod +x /srv/chming/config/script/app_start.sh
-WORKDIR     /srv/chming/config/script
-CMD         /srv/chming/config/script/app_start.sh
+RUN         chmod +x /srv/chming/.config/script/app_start.sh
+WORKDIR     /srv/chming/.config/script
+CMD         /srv/chming/.config/script/app_start.sh
 
