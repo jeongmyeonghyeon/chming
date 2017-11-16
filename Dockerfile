@@ -8,6 +8,9 @@ WORKDIR     /srv/chming
 # requirements설치
 RUN         /root/.pyenv/versions/chming/bin/pip install -r .requirements/deploy.txt
 
+COPY         .config/script/uwsgi /etc/init.d/uwsgi
+RUN          chmod +x /etc/init.d/uwsgi
+
 # supervisor파일 복사
 #COPY        .config/supervisor/uwsgi.conf /etc/supervisor/conf.d/
 #COPY        .config/supervisor/nginx.conf /etc/supervisor/conf.d/
