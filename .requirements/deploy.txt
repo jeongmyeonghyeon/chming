@@ -6,4 +6,3 @@ django-storages<1.7
 boto3<1.5
 djangorestframework<3.7
 django-cors-headers<2.1.0
-django-doc<1.1.0
