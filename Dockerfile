@@ -8,12 +8,12 @@ WORKDIR     /srv/chming
 # requirements설치
 RUN         /root/.pyenv/versions/chming/bin/pip install -r .requirements/deploy.txt
 
-COPY         .config/script/uwsgi /etc/init.d/uwsgi
-RUN          chmod +x /etc/init.d/uwsgi
+#COPY         .config/script/uwsgi /etc/init.d/uwsgi
+#RUN          chmod +x /etc/init.d/uwsgi
 
 # supervisor파일 복사
-#COPY        .config/supervisor/uwsgi.conf /etc/supervisor/conf.d/
-#COPY        .config/supervisor/nginx.conf /etc/supervisor/conf.d/
+COPY        .config/supervisor/uwsgi.conf /etc/supervisor/conf.d/
+COPY        .config/supervisor/nginx.conf /etc/supervisor/conf.d/
 
 # nginx파일 복사
 COPY        .config/nginx/nginx.conf /etc/nginx/nginx.conf
@@ -31,10 +31,9 @@ RUN         git clone https://github.com/jeongmyeonghyeon/chming-front.git front
 # collectstatic
 #RUN         /root/.pyenv/versions/chming/bin/python /srv/chming/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
 
+CMD         supervisord -n
+#RUN         chmod +x /srv/chming/.config/script/app_start.sh
+#WORKDIR     /srv/chming/.config/script
+#CMD         /srv/chming/.config/script/app_start.sh
+
 EXPOSE      80 8000
-
-#CMD         supervisord -n
-RUN         chmod +x /srv/chming/.config/script/app_start.sh
-WORKDIR     /srv/chming/.config/script
-CMD         /srv/chming/.config/script/app_start.sh
-
